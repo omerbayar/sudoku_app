@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'main.dart';
+import 'screens/dashboard.dart';
 import 'screens/sudoku.dart';
 
 final GoRouter router = GoRouter(
@@ -13,8 +13,7 @@ final GoRouter router = GoRouter(
       routes: [
         GoRoute(
           path: '/',
-          builder: (context, state) =>
-              const MyHomePage(title: "Omer's puzzle app"),
+          builder: (context, state) => const DashboardScreen(),
         ),
         GoRoute(
           path: '/sudokuScreen',
