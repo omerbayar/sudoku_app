@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'screens/dashboard.dart';
 import 'screens/sudoku.dart';
+import 'screens/profile.dart';
 
 final GoRouter router = GoRouter(
   initialLocation: '/',
@@ -19,6 +20,7 @@ final GoRouter router = GoRouter(
           path: '/sudokuScreen',
           builder: (context, state) => SudokuScreen(),
         ),
+        GoRoute(path: '/profile', builder: (context, state) => ProfileScreen()),
       ],
     ),
   ],
@@ -59,7 +61,7 @@ class ScaffoldWithNavBar extends StatelessWidget {
         //game searching screen
         break;
       case 2:
-        //profile gelicek
+        context.go('/profile');
         break;
     }
   }
