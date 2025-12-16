@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -15,7 +14,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            context.go('/');
+          },
+          icon: Icon(
+            CupertinoIcons.chevron_back,
+            color: Theme.of(context).colorScheme.onSurface,
+            size: 24,
+          ),
+        ),
+        title: const Text('Profile'),
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
