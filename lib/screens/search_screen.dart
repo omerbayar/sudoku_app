@@ -12,8 +12,9 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final _searchController = TextEditingController();
+  String _selectedCategory = 'All';
 
-  final _allGames = [
+  final _allGames = const [
     _SearchGameItem(
       'Sudoku',
       'Classic number puzzle',
@@ -21,6 +22,7 @@ class _SearchScreenState extends State<SearchScreen> {
       AppTheme.accentBlue,
       true,
       '/sudokuScreen',
+      'Logic',
     ),
     _SearchGameItem(
       'Word Hunt',
@@ -28,7 +30,8 @@ class _SearchScreenState extends State<SearchScreen> {
       FontAwesomeIcons.font,
       AppTheme.softPurple,
       false,
-      '',
+      '/word-hunt',
+      'Words',
     ),
     _SearchGameItem(
       'Memory',
@@ -36,15 +39,17 @@ class _SearchScreenState extends State<SearchScreen> {
       FontAwesomeIcons.brain,
       AppTheme.warmOrange,
       false,
-      '',
+      '/memory',
+      'Brain',
     ),
     _SearchGameItem(
       'Maze',
       'Find the exit',
       FontAwesomeIcons.route,
-      const Color(0xFF26A69A),
+      Color(0xFF26A69A),
       false,
-      '',
+      '/maze',
+      'Strategy',
     ),
   ];
 
@@ -56,15 +61,19 @@ class _SearchScreenState extends State<SearchScreen> {
     _filteredGames = _allGames;
   }
 
-  void _onSearch(String query) {
+  void _applyFilters() {
+    final query = _searchController.text.toLowerCase();
     setState(() {
-      if (query.isEmpty) {
-        _filteredGames = _allGames;
-      } else {
-        _filteredGames = _allGames
-            .where((g) => g.title.toLowerCase().contains(query.toLowerCase()))
-            .toList();
-      }
+      _filteredGames = _allGames.where((g) {
+        final matchesQuery =
+            query.isEmpty ||
+            g.title.toLowerCase().contains(query) ||
+            g.subtitle.toLowerCase().contains(query) ||
+            g.category.toLowerCase().contains(query);
+        final matchesCategory =
+            _selectedCategory == 'All' || g.category == _selectedCategory;
+        return matchesQuery && matchesCategory;
+      }).toList();
     });
   }
 
@@ -80,16 +89,23 @@ class _SearchScreenState extends State<SearchScreen> {
       backgroundColor: AppTheme.surfaceLight,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 12),
-              Text('Search', style: Theme.of(context).textTheme.headlineLarge),
-              const SizedBox(height: 16),
-              _buildSearchBar(),
               const SizedBox(height: 24),
-              Text('All Games', style: Theme.of(context).textTheme.titleMedium),
+              Text('Search', style: Theme.of(context).textTheme.headlineLarge),
+              const SizedBox(height: 6),
+              Text(
+                'Find your next puzzle',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              const SizedBox(height: 20),
+              _buildSearchBar(),
+              const SizedBox(height: 16),
+              _buildCategoryChips(),
+              const SizedBox(height: 20),
+              _buildResultsHeader(),
               const SizedBox(height: 12),
               Expanded(child: _buildGameList()),
             ],
@@ -102,25 +118,89 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget _buildSearchBar() {
     return TextField(
       controller: _searchController,
-      onChanged: _onSearch,
+      onChanged: (_) => _applyFilters(),
       decoration: InputDecoration(
         hintText: 'Search puzzles...',
         hintStyle: const TextStyle(color: AppTheme.textSecondary),
-        prefixIcon: const Icon(
-          FontAwesomeIcons.magnifyingGlass,
-          size: 16,
-          color: AppTheme.textSecondary,
+        prefixIcon: const Padding(
+          padding: EdgeInsets.only(left: 14, right: 10),
+          child: Icon(
+            FontAwesomeIcons.magnifyingGlass,
+            size: 16,
+            color: AppTheme.textSecondary,
+          ),
         ),
+        prefixIconConstraints: const BoxConstraints(minWidth: 40),
         suffixIcon: _searchController.text.isNotEmpty
             ? IconButton(
                 icon: const Icon(Icons.close, size: 18),
                 onPressed: () {
                   _searchController.clear();
-                  _onSearch('');
+                  _applyFilters();
                 },
               )
             : null,
       ),
+    );
+  }
+
+  Widget _buildCategoryChips() {
+    final categories = ['All', 'Logic', 'Words', 'Brain', 'Strategy'];
+    return SizedBox(
+      height: 38,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: categories.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 8),
+        itemBuilder: (context, index) {
+          final cat = categories[index];
+          final isSelected = cat == _selectedCategory;
+          return GestureDetector(
+            onTap: () {
+              _selectedCategory = cat;
+              _applyFilters();
+            },
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              padding: const EdgeInsets.symmetric(horizontal: 18),
+              decoration: BoxDecoration(
+                color: isSelected ? AppTheme.primaryGreen : Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: isSelected
+                      ? AppTheme.primaryGreen
+                      : Colors.grey.shade200,
+                ),
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                cat,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                  color: isSelected ? Colors.white : AppTheme.textSecondary,
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildResultsHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          _selectedCategory == 'All' ? 'All Games' : _selectedCategory,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        Text(
+          '${_filteredGames.length} ${_filteredGames.length == 1 ? 'game' : 'games'}',
+          style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary),
+        ),
+      ],
     );
   }
 
@@ -131,13 +211,22 @@ class _SearchScreenState extends State<SearchScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              FontAwesomeIcons.magnifyingGlass,
+              FontAwesomeIcons.faceSadTear,
               size: 48,
               color: Colors.grey.shade300,
             ),
             const SizedBox(height: 16),
             const Text(
               'No games found',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.textPrimary,
+              ),
+            ),
+            const SizedBox(height: 6),
+            const Text(
+              'Try a different search or category',
               style: TextStyle(color: AppTheme.textSecondary),
             ),
           ],
@@ -148,16 +237,13 @@ class _SearchScreenState extends State<SearchScreen> {
     return ListView.separated(
       itemCount: _filteredGames.length,
       separatorBuilder: (_, __) => const SizedBox(height: 10),
-      itemBuilder: (context, index) {
-        final game = _filteredGames[index];
-        return _buildGameTile(game);
-      },
+      itemBuilder: (context, index) => _buildGameTile(_filteredGames[index]),
     );
   }
 
   Widget _buildGameTile(_SearchGameItem game) {
     return GestureDetector(
-      onTap: game.isActive ? () => context.push(game.route) : null,
+      onTap: () => context.push(game.route),
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -174,8 +260,8 @@ class _SearchScreenState extends State<SearchScreen> {
         child: Row(
           children: [
             Container(
-              width: 50,
-              height: 50,
+              width: 52,
+              height: 52,
               decoration: BoxDecoration(
                 color: game.color.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(14),
@@ -187,15 +273,40 @@ class _SearchScreenState extends State<SearchScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    game.title,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.textPrimary,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        game.title,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.textPrimary,
+                        ),
+                      ),
+                      if (!game.isAvailable) ...[
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Text(
+                            'Soon',
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: AppTheme.textSecondary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 3),
                   Text(
                     game.subtitle,
                     style: const TextStyle(
@@ -206,28 +317,21 @@ class _SearchScreenState extends State<SearchScreen> {
                 ],
               ),
             ),
-            if (game.isActive)
-              const Icon(
-                FontAwesomeIcons.chevronRight,
-                size: 14,
-                color: AppTheme.textSecondary,
-              )
-            else
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: const Text(
-                  'Soon',
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: AppTheme.textSecondary,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: game.isAvailable
+                    ? game.color.withValues(alpha: 0.1)
+                    : Colors.grey.shade50,
+                borderRadius: BorderRadius.circular(10),
               ),
+              child: Icon(
+                FontAwesomeIcons.chevronRight,
+                size: 12,
+                color: game.isAvailable ? game.color : AppTheme.textSecondary,
+              ),
+            ),
           ],
         ),
       ),
@@ -240,15 +344,17 @@ class _SearchGameItem {
   final String subtitle;
   final IconData icon;
   final Color color;
-  final bool isActive;
+  final bool isAvailable;
   final String route;
+  final String category;
 
   const _SearchGameItem(
     this.title,
     this.subtitle,
     this.icon,
     this.color,
-    this.isActive,
+    this.isAvailable,
     this.route,
+    this.category,
   );
 }
