@@ -43,29 +43,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Hey there 👋',
+                    'Wassup boi, welcome to',
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Puzzle Hub',
+                    'Brainiac Hub',
                     style: Theme.of(context).textTheme.headlineLarge,
                   ),
                 ],
               ),
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: AppTheme.lightGreen,
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: const Icon(
-                  FontAwesomeIcons.bell,
-                  size: 20,
-                  color: AppTheme.darkGreen,
-                ),
-              ),
+              // Container(
+              //   width: 48,
+              //   height: 48,
+              //   decoration: BoxDecoration(
+              //     color: AppTheme.lightGreen,
+              //     borderRadius: BorderRadius.circular(14),
+              //   ),
+              //   child: const Icon(
+              //     FontAwesomeIcons.bell,
+              //     size: 20,
+              //     color: AppTheme.darkGreen,
+              //   ),
+              // ),
             ],
           ),
         ],
