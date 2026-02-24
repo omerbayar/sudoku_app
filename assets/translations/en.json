@@ -61,5 +61,11 @@
   "rate_the_app": "Rate the App",
   "share_with_friends": "Share with Friends",
   "send_feedback": "Send Feedback",
-  "copyright": "© 2025 Puzzle Hub"
+  "copyright": "© 2025 Puzzle Hub",
+  "settings": "Settings",
+  "general_settings": "General settings",
+  "language": "Language",
+  "select_language": "Select language",
+  "english": "English",
+  "turkish": "Türkçe"
 }

@@ -61,5 +61,11 @@
   "rate_the_app": "Uygulamayı Değerlendir",
   "share_with_friends": "Arkadaşlarınla Paylaş",
   "send_feedback": "Geri Bildirim Gönder",
-  "copyright": "© 2025 Puzzle Hub"
+  "copyright": "© 2025 Puzzle Hub",
+  "settings": "Ayarlar",
+  "general_settings": "Genel ayarlar",
+  "language": "Dil",
+  "select_language": "Dil seçin",
+  "english": "English",
+  "turkish": "Türkçe"
 }

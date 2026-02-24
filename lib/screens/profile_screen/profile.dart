@@ -169,15 +169,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           _divider(),
           _buildSettingsTile(
-            FontAwesomeIcons.palette,
-            translate("appearance"),
-            translate("theme_display"),
-          ),
-          _divider(),
-          _buildSettingsTile(
-            FontAwesomeIcons.bell,
-            translate("notifications"),
-            translate("reminders_alerts"),
+            FontAwesomeIcons.gear,
+            translate("settings"),
+            translate("general_settings"),
+            onTap: () => context.push('/profile/settings'),
           ),
           _divider(),
           _buildSettingsTile(
