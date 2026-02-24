@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'screens/dashboard.dart';
 import 'screens/sudoku.dart';
 import 'screens/profile.dart';
+import 'screens/search_screen.dart';
 
 final GoRouter router = GoRouter(
   initialLocation: '/',
@@ -17,10 +19,17 @@ final GoRouter router = GoRouter(
           builder: (context, state) => const DashboardScreen(),
         ),
         GoRoute(
-          path: '/sudokuScreen',
-          builder: (context, state) => SudokuScreen(),
+          path: '/search',
+          builder: (context, state) => const SearchScreen(),
         ),
-        GoRoute(path: '/profile', builder: (context, state) => ProfileScreen()),
+        GoRoute(
+          path: '/profile',
+          builder: (context, state) => const ProfileScreen(),
+        ),
+        GoRoute(
+          path: '/sudokuScreen',
+          builder: (context, state) => const SudokuScreen(),
+        ),
       ],
     ),
   ],
@@ -34,14 +43,38 @@ class ScaffoldWithNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: child,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _calculateSelectedIndex(context),
-        onTap: (index) => _onItemTapped(index, context),
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-        ],
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 20,
+              offset: const Offset(0, -5),
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _calculateSelectedIndex(context),
+          onTap: (index) => _onItemTapped(index, context),
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.house),
+              activeIcon: Icon(FontAwesomeIcons.house),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.magnifyingGlass),
+              activeIcon: Icon(FontAwesomeIcons.magnifyingGlass),
+              label: 'Search',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.user),
+              activeIcon: Icon(FontAwesomeIcons.solidUser),
+              label: 'Profile',
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -49,6 +82,8 @@ class ScaffoldWithNavBar extends StatelessWidget {
   int _calculateSelectedIndex(BuildContext context) {
     final String location = GoRouterState.of(context).uri.path;
     if (location == '/') return 0;
+    if (location.startsWith('/search')) return 1;
+    if (location.startsWith('/profile')) return 2;
     return 0;
   }
 
@@ -58,7 +93,7 @@ class ScaffoldWithNavBar extends StatelessWidget {
         context.go('/');
         break;
       case 1:
-        //game searching screen
+        context.go('/search');
         break;
       case 2:
         context.go('/profile');
