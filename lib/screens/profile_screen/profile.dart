@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../theme/app_theme.dart';
+import '../../theme/app_theme.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -154,6 +155,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         children: [
           _buildSettingsTile(
+            FontAwesomeIcons.circleInfo,
+            'About',
+            'App info & credits',
+            onTap: () => context.push('/profile/about'),
+          ),
+          _divider(),
+          _buildSettingsTile(
             FontAwesomeIcons.palette,
             'Appearance',
             'Theme & display',
@@ -170,19 +178,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
             'Statistics',
             'Your game history',
           ),
-          _divider(),
-          _buildSettingsTile(
-            FontAwesomeIcons.circleInfo,
-            'About',
-            'App info & credits',
-          ),
         ],
       ),
     );
   }
 
-  Widget _buildSettingsTile(IconData icon, String title, String subtitle) {
+  Widget _buildSettingsTile(
+    IconData icon,
+    String title,
+    String subtitle, {
+    VoidCallback? onTap,
+  }) {
     return ListTile(
+      onTap: onTap,
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
       leading: Container(
         width: 40,

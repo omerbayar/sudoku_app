@@ -3,7 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'screens/dashboard.dart';
 import 'screens/sudoku.dart';
-import 'screens/profile.dart';
+import 'screens/profile_screen/profile.dart';
+import 'screens/profile_screen/about.dart';
 import 'screens/search_screen.dart';
 import 'screens/coming_soon_screen.dart';
 
@@ -26,6 +27,10 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: '/profile',
           builder: (context, state) => const ProfileScreen(),
+        ),
+        GoRoute(
+          path: '/profile/about',
+          builder: (context, state) => const AboutScreen(),
         ),
         GoRoute(
           path: '/sudokuScreen',
