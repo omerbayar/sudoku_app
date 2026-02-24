@@ -165,11 +165,15 @@ class SudokuScreenState extends State<SudokuScreen> {
           _errors[_selectedRow!][_selectedCol!] = true;
           _mistakeCount++;
           if (_mistakeCount >= _maxMistakes) {
-            _showGameOverDialog();
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _showGameOverDialog();
+            });
           }
         } else {
           _errors[_selectedRow!][_selectedCol!] = false;
-          _checkWin();
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _checkWin();
+          });
         }
       }
     });
@@ -218,10 +222,11 @@ class SudokuScreenState extends State<SudokuScreen> {
   }
 
   void _showWinDialog() {
+    if (!mounted) return;
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (_) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Row(
           children: [
@@ -234,8 +239,8 @@ class SudokuScreenState extends State<SudokuScreen> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop();
-              setState(() => _gameStarted = false);
+              Navigator.of(dialogContext).pop();
+              if (mounted) setState(() => _gameStarted = false);
             },
             child: const Text('Yeni Oyun'),
           ),
@@ -245,10 +250,11 @@ class SudokuScreenState extends State<SudokuScreen> {
   }
 
   void _showGameOverDialog() {
+    if (!mounted) return;
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (_) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Row(
           children: [
@@ -261,8 +267,8 @@ class SudokuScreenState extends State<SudokuScreen> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop();
-              setState(() => _gameStarted = false);
+              Navigator.of(dialogContext).pop();
+              if (mounted) setState(() => _gameStarted = false);
             },
             child: const Text('Tamam'),
           ),
@@ -274,7 +280,7 @@ class SudokuScreenState extends State<SudokuScreen> {
   void _showHelpDialog() {
     showDialog(
       context: context,
-      builder: (_) => Dialog(
+      builder: (dialogContext) => Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         child: Container(
           constraints: const BoxConstraints(maxWidth: 400),
@@ -311,7 +317,7 @@ class SudokuScreenState extends State<SudokuScreen> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => Navigator.of(context).pop(),
+                      onTap: () => Navigator.of(dialogContext).pop(),
                       child: const Icon(
                         CupertinoIcons.xmark_circle_fill,
                         color: AppTheme.textSecondary,
