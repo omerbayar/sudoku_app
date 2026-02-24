@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../theme/app_theme.dart';
+import '../localization/app_localization.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -43,12 +44,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Wassup boi, welcome to',
+                    translate("wassup_welcome"),
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Brainiac Hub',
+                    translate("brainiac_hub"),
                     style: Theme.of(context).textTheme.headlineLarge,
                   ),
                 ],
@@ -111,9 +112,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Text(
-                        '🔥 Popular',
-                        style: TextStyle(
+                      child: Text(
+                        translate("popular"),
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
@@ -121,9 +122,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    const Text(
-                      'Sudoku',
-                      style: TextStyle(
+                    Text(
+                      translate("sudoku"),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 26,
                         fontWeight: FontWeight.w700,
@@ -131,7 +132,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      'Challenge your mind with the classic number puzzle',
+                      translate("challenge_your_mind"),
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.85),
                         fontSize: 14,
@@ -147,9 +148,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Text(
-                        'Play Now',
-                        style: TextStyle(
+                      child: Text(
+                        translate("play_now"),
+                        style: const TextStyle(
                           color: AppTheme.darkGreen,
                           fontWeight: FontWeight.w600,
                           fontSize: 14,
@@ -183,7 +184,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   SliverGrid _buildGameGrid() {
     final games = [
       _GameItem(
-        'Sudoku',
+        translate("sudoku"),
         FontAwesomeIcons.tableCells,
         const Color(0xFF42A5F5),
         const Color(0xFF1E88E5),
@@ -191,7 +192,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         '/sudokuScreen',
       ),
       _GameItem(
-        'Word Hunt',
+        translate("word_hunt"),
         FontAwesomeIcons.font,
         const Color(0xFF7E57C2),
         const Color(0xFF5E35B1),
@@ -199,7 +200,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         '/word-hunt',
       ),
       _GameItem(
-        'Memory',
+        translate("memory"),
         FontAwesomeIcons.brain,
         const Color(0xFFFF7043),
         const Color(0xFFE64A19),
@@ -207,7 +208,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         '/memory',
       ),
       _GameItem(
-        'Maze',
+        translate("maze"),
         FontAwesomeIcons.route,
         const Color(0xFF26A69A),
         const Color(0xFF00897B),
@@ -286,7 +287,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    game.isActive ? 'Tap to play' : 'Coming soon',
+                    game.isActive
+                        ? translate("tap_to_play")
+                        : translate("coming_soon"),
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.white.withValues(alpha: 0.75),
@@ -308,9 +311,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     color: Colors.black.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(6),
                   ),
-                  child: const Text(
-                    'Soon',
-                    style: TextStyle(
+                  child: Text(
+                    translate("soon"),
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 10,
                       fontWeight: FontWeight.w600,

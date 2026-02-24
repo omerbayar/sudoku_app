@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../theme/app_theme.dart';
+import '../../localization/app_localization.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -59,9 +60,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
         const SizedBox(height: 16),
-        Text('Player', style: Theme.of(context).textTheme.headlineMedium),
+        Text(
+          translate("player"),
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
         const SizedBox(height: 4),
-        Text('Puzzle Enthusiast', style: Theme.of(context).textTheme.bodyLarge),
+        Text(
+          translate("puzzle_enthusiast"),
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
       ],
     );
   }
@@ -70,21 +77,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Row(
       children: [
         _buildStatCard(
-          'Games',
+          translate("games"),
           '0',
           FontAwesomeIcons.gamepad,
           AppTheme.accentBlue,
         ),
         const SizedBox(width: 12),
         _buildStatCard(
-          'Wins',
+          translate("wins"),
           '0',
           FontAwesomeIcons.trophy,
           AppTheme.warmOrange,
         ),
         const SizedBox(width: 12),
         _buildStatCard(
-          'Streak',
+          translate("streak"),
           '0',
           FontAwesomeIcons.fire,
           AppTheme.softPurple,
@@ -156,27 +163,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           _buildSettingsTile(
             FontAwesomeIcons.circleInfo,
-            'About',
-            'App info & credits',
+            translate("about"),
+            translate("app_info_credits"),
             onTap: () => context.push('/profile/about'),
           ),
           _divider(),
           _buildSettingsTile(
             FontAwesomeIcons.palette,
-            'Appearance',
-            'Theme & display',
+            translate("appearance"),
+            translate("theme_display"),
           ),
           _divider(),
           _buildSettingsTile(
             FontAwesomeIcons.bell,
-            'Notifications',
-            'Reminders & alerts',
+            translate("notifications"),
+            translate("reminders_alerts"),
           ),
           _divider(),
           _buildSettingsTile(
             FontAwesomeIcons.chartBar,
-            'Statistics',
-            'Your game history',
+            translate("statistics"),
+            translate("your_game_history"),
           ),
         ],
       ),

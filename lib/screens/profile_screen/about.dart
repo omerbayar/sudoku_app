@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../theme/app_theme.dart';
+import '../../localization/app_localization.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
@@ -17,7 +18,7 @@ class AboutScreen extends StatelessWidget {
           onPressed: () => context.pop(),
           icon: const Icon(CupertinoIcons.chevron_back, size: 24),
         ),
-        title: const Text('About'),
+        title: Text(translate("about")),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -27,20 +28,26 @@ class AboutScreen extends StatelessWidget {
             _buildAppIcon(),
             const SizedBox(height: 20),
             Text(
-              'Puzzle Hub',
+              translate("puzzle_hub"),
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 6),
-            Text('Version 1.0.0', style: Theme.of(context).textTheme.bodyLarge),
+            Text(
+              translate("version"),
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
             const SizedBox(height: 32),
             _buildInfoCard(context),
             const SizedBox(height: 16),
             _buildLinksCard(context),
             const SizedBox(height: 32),
             const SizedBox(height: 6),
-            const Text(
-              '© 2025 Puzzle Hub',
-              style: TextStyle(fontSize: 12, color: AppTheme.textSecondary),
+            Text(
+              translate("copyright"),
+              style: const TextStyle(
+                fontSize: 12,
+                color: AppTheme.textSecondary,
+              ),
             ),
             const SizedBox(height: 20),
           ],
@@ -92,9 +99,17 @@ class AboutScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _infoTile(FontAwesomeIcons.gamepad, 'Games Available', '4 puzzles'),
+          _infoTile(
+            FontAwesomeIcons.gamepad,
+            translate("games_available"),
+            translate("four_puzzles"),
+          ),
           _divider(),
-          _infoTile(FontAwesomeIcons.code, 'Developer', 'Omer Bayar'),
+          _infoTile(
+            FontAwesomeIcons.code,
+            translate("developer"),
+            translate("developer_name"),
+          ),
         ],
       ),
     );
@@ -116,17 +131,21 @@ class AboutScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _linkTile(FontAwesomeIcons.star, 'Rate the App', AppTheme.warmOrange),
+          _linkTile(
+            FontAwesomeIcons.star,
+            translate("rate_the_app"),
+            AppTheme.warmOrange,
+          ),
           _divider(),
           _linkTile(
             FontAwesomeIcons.shareNodes,
-            'Share with Friends',
+            translate("share_with_friends"),
             AppTheme.accentBlue,
           ),
           _divider(),
           _linkTile(
             FontAwesomeIcons.envelope,
-            'Send Feedback',
+            translate("send_feedback"),
             AppTheme.softPurple,
           ),
         ],

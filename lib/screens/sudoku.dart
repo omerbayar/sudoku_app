@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../theme/app_theme.dart';
+import '../localization/app_localization.dart';
 
 class SudokuScreen extends StatefulWidget {
   const SudokuScreen({super.key});
@@ -228,21 +229,25 @@ class SudokuScreenState extends State<SudokuScreen> {
       barrierDismissible: false,
       builder: (dialogContext) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Row(
+        title: Row(
           children: [
-            Icon(FontAwesomeIcons.trophy, color: AppTheme.warmOrange, size: 24),
-            SizedBox(width: 12),
-            Text('Tebrikler!'),
+            const Icon(
+              FontAwesomeIcons.trophy,
+              color: AppTheme.warmOrange,
+              size: 24,
+            ),
+            const SizedBox(width: 12),
+            Text(translate("congratulations")),
           ],
         ),
-        content: const Text('Sudoku bulmacasını başarıyla çözdünüz!'),
+        content: Text(translate("sudoku_solved")),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.of(dialogContext).pop();
               if (mounted) setState(() => _gameStarted = false);
             },
-            child: const Text('Yeni Oyun'),
+            child: Text(translate("new_game")),
           ),
         ],
       ),
@@ -256,21 +261,25 @@ class SudokuScreenState extends State<SudokuScreen> {
       barrierDismissible: false,
       builder: (dialogContext) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Row(
+        title: Row(
           children: [
-            Icon(FontAwesomeIcons.faceSadTear, color: Colors.red, size: 24),
-            SizedBox(width: 12),
-            Text('Oyun Bitti'),
+            const Icon(
+              FontAwesomeIcons.faceSadTear,
+              color: Colors.red,
+              size: 24,
+            ),
+            const SizedBox(width: 12),
+            Text(translate("game_over")),
           ],
         ),
-        content: const Text('3 hata yaptınız. Tekrar deneyin!'),
+        content: Text(translate("three_mistakes")),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.of(dialogContext).pop();
               if (mounted) setState(() => _gameStarted = false);
             },
-            child: const Text('Tamam'),
+            child: Text(translate("ok")),
           ),
         ],
       ),
@@ -306,9 +315,9 @@ class SudokuScreenState extends State<SudokuScreen> {
                       ),
                     ),
                     const SizedBox(width: 14),
-                    const Expanded(
+                    Expanded(
                       child: Text(
-                        'Sudoku Nedir?',
+                        translate("what_is_sudoku"),
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
@@ -333,26 +342,21 @@ class SudokuScreenState extends State<SudokuScreen> {
                     color: AppTheme.lightGreen.withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(14),
                   ),
-                  child: const Column(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '📖 Kısa Tarihçe',
-                        style: TextStyle(
+                        translate("short_history"),
+                        style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
                           color: AppTheme.darkGreen,
                         ),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
-                        'Sudoku, 18. yüzyılda İsviçreli matematikçi Leonhard Euler\'in '
-                        '"Latin Kareleri" çalışmasından ilham alınarak ortaya çıkmıştır. '
-                        'Modern hali 1979\'da Amerikalı Howard Garns tarafından '
-                        '"Number Place" adıyla tasarlanmış, ardından 1984\'te Japonya\'da '
-                        '"Sudoku" (sayı tek olmalı) adıyla büyük popülerlik kazanmıştır. '
-                        '2005 yılından itibaren tüm dünyada en sevilen bulmacalardan biri haline gelmiştir.',
-                        style: TextStyle(
+                        translate("sudoku_history"),
+                        style: const TextStyle(
                           fontSize: 13,
                           height: 1.5,
                           color: AppTheme.textPrimary,
@@ -369,41 +373,25 @@ class SudokuScreenState extends State<SudokuScreen> {
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(color: Colors.grey.shade200),
                   ),
-                  child: const Column(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '🎮 Nasıl Oynanır?',
-                        style: TextStyle(
+                        translate("how_to_play"),
+                        style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
                           color: AppTheme.textPrimary,
                         ),
                       ),
-                      SizedBox(height: 10),
-                      _HelpRule(
-                        number: '1',
-                        text:
-                            '9×9\'luk ızgaranın her satırında 1-9 arası rakamlar birer kez bulunmalıdır.',
-                      ),
-                      SizedBox(height: 8),
-                      _HelpRule(
-                        number: '2',
-                        text:
-                            'Her sütunda da 1-9 arası rakamlar birer kez yer almalıdır.',
-                      ),
-                      SizedBox(height: 8),
-                      _HelpRule(
-                        number: '3',
-                        text:
-                            'Her 3×3\'lük kutucukta 1-9 arası rakamlar tekrar etmemelidir.',
-                      ),
-                      SizedBox(height: 8),
-                      _HelpRule(
-                        number: '4',
-                        text:
-                            'Önceden yerleştirilmiş sayıları ipucu olarak kullanarak boş hücreleri doldurun.',
-                      ),
+                      const SizedBox(height: 10),
+                      _HelpRule(number: '1', text: translate("rule_1")),
+                      const SizedBox(height: 8),
+                      _HelpRule(number: '2', text: translate("rule_2")),
+                      const SizedBox(height: 8),
+                      _HelpRule(number: '3', text: translate("rule_3")),
+                      const SizedBox(height: 8),
+                      _HelpRule(number: '4', text: translate("rule_4")),
                     ],
                   ),
                 ),
@@ -414,22 +402,20 @@ class SudokuScreenState extends State<SudokuScreen> {
                     color: AppTheme.accentBlue.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(14),
                   ),
-                  child: const Column(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '💡 İpuçları',
-                        style: TextStyle(
+                        translate("tips"),
+                        style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
                           color: AppTheme.accentBlue,
                         ),
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
-                        '• Not modunu kullanarak olası sayıları işaretleyin.\n'
-                        '• 3 ipucu hakkınız var, zor anlarda kullanın.\n'
-                        '• 3 hata yaparsanız oyun sona erer, dikkatli olun!',
+                        translate("tips_text"),
                         style: TextStyle(
                           fontSize: 13,
                           height: 1.6,
@@ -457,7 +443,7 @@ class SudokuScreenState extends State<SudokuScreen> {
           onPressed: () => context.pop(),
           icon: const Icon(CupertinoIcons.chevron_back, size: 24),
         ),
-        title: const Text('Sudoku'),
+        title: Text(translate("sudoku")),
         actions: [
           IconButton(
             onPressed: _showHelpDialog,
@@ -611,7 +597,7 @@ class SudokuScreenState extends State<SudokuScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Zorluk seçip oyuna başlayın',
+                translate("select_difficulty_start"),
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
@@ -627,7 +613,9 @@ class SudokuScreenState extends State<SudokuScreen> {
       child: ElevatedButton.icon(
         onPressed: _startGame,
         icon: const Icon(FontAwesomeIcons.play, size: 16),
-        label: Text('Start $_selectedDifficulty Game'),
+        label: Text(
+          translate("start_game", {"difficulty": _selectedDifficulty}),
+        ),
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
@@ -792,23 +780,23 @@ class SudokuScreenState extends State<SudokuScreen> {
       children: [
         _buildActionButton(
           icon: FontAwesomeIcons.eraser,
-          label: 'Sil',
+          label: translate("erase"),
           onTap: _onErase,
         ),
         _buildActionButton(
           icon: FontAwesomeIcons.pencil,
-          label: 'Not',
+          label: translate("notes"),
           onTap: () => setState(() => _notesMode = !_notesMode),
           isActive: _notesMode,
         ),
         _buildActionButton(
           icon: FontAwesomeIcons.lightbulb,
-          label: 'İpucu ($_hintCount)',
+          label: translate("hint_count", {"count": _hintCount.toString()}),
           onTap: _onHint,
         ),
         _buildActionButton(
           icon: FontAwesomeIcons.arrowRotateLeft,
-          label: 'Yeniden',
+          label: translate("restart"),
           onTap: () => setState(() => _gameStarted = false),
         ),
       ],
