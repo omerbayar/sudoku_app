@@ -5,6 +5,7 @@ import 'screens/dashboard.dart';
 import 'screens/sudoku.dart';
 import 'screens/profile.dart';
 import 'screens/search_screen.dart';
+import 'screens/coming_soon_screen.dart';
 
 final GoRouter router = GoRouter(
   initialLocation: '/',
@@ -29,6 +30,39 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: '/sudokuScreen',
           builder: (context, state) => const SudokuScreen(),
+        ),
+        GoRoute(
+          path: '/word-hunt',
+          builder: (context, state) => const ComingSoonScreen(
+            title: 'Word Hunt',
+            description:
+                'Find hidden words in a grid of letters.\nTest your vocabulary and pattern recognition.',
+            icon: FontAwesomeIcons.font,
+            colorStart: Color(0xFF7E57C2),
+            colorEnd: Color(0xFF5E35B1),
+          ),
+        ),
+        GoRoute(
+          path: '/memory',
+          builder: (context, state) => const ComingSoonScreen(
+            title: 'Memory',
+            description:
+                'Flip cards and match pairs.\nTrain your memory with increasing difficulty.',
+            icon: FontAwesomeIcons.brain,
+            colorStart: Color(0xFFFF7043),
+            colorEnd: Color(0xFFE64A19),
+          ),
+        ),
+        GoRoute(
+          path: '/maze',
+          builder: (context, state) => const ComingSoonScreen(
+            title: 'Maze',
+            description:
+                'Navigate through complex mazes.\nFind the shortest path to the exit.',
+            icon: FontAwesomeIcons.route,
+            colorStart: Color(0xFF26A69A),
+            colorEnd: Color(0xFF00897B),
+          ),
         ),
       ],
     ),

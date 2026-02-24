@@ -188,6 +188,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         const Color(0xFF42A5F5),
         const Color(0xFF1E88E5),
         true,
+        '/sudokuScreen',
       ),
       _GameItem(
         'Word Hunt',
@@ -195,6 +196,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         const Color(0xFF7E57C2),
         const Color(0xFF5E35B1),
         false,
+        '/word-hunt',
       ),
       _GameItem(
         'Memory',
@@ -202,6 +204,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         const Color(0xFFFF7043),
         const Color(0xFFE64A19),
         false,
+        '/memory',
       ),
       _GameItem(
         'Maze',
@@ -209,6 +212,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         const Color(0xFF26A69A),
         const Color(0xFF00897B),
         false,
+        '/maze',
       ),
     ];
 
@@ -228,7 +232,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildGameCard(_GameItem game) {
     return GestureDetector(
-      onTap: game.isActive ? () => context.push('/sudokuScreen') : null,
+      onTap: () => context.push(game.route),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
@@ -327,6 +331,7 @@ class _GameItem {
   final Color colorStart;
   final Color colorEnd;
   final bool isActive;
+  final String route;
 
   const _GameItem(
     this.title,
@@ -334,5 +339,6 @@ class _GameItem {
     this.colorStart,
     this.colorEnd,
     this.isActive,
+    this.route,
   );
 }
