@@ -604,12 +604,15 @@ class SudokuScreenState extends State<SudokuScreen> {
   }
 
   Widget _buildBoard(AppColors c) {
-    final boardSize = MediaQuery.of(context).size.width - 32;
+    final borderWidth = 2.0;
+    final boardSize =
+        MediaQuery.of(context).size.width - 32 - (borderWidth * 2);
     final cellSize = boardSize / 9;
     return Container(
       decoration: BoxDecoration(
         color: c.card,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(0),
+        border: Border.all(color: c.accent, width: borderWidth),
         boxShadow: [
           BoxShadow(
             color: c.shadowMedium,
@@ -619,7 +622,6 @@ class SudokuScreenState extends State<SudokuScreen> {
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
         child: SizedBox(
           width: boardSize,
           height: boardSize,
@@ -639,7 +641,10 @@ class SudokuScreenState extends State<SudokuScreen> {
               IgnorePointer(
                 child: CustomPaint(
                   size: Size(boardSize, boardSize),
-                  painter: _GridPainter(c.accent),
+                  painter: _GridPainter(
+                    thinColor: c.divider,
+                    thickColor: c.accent,
+                  ),
                 ),
               ),
             ],
@@ -683,13 +688,7 @@ class SudokuScreenState extends State<SudokuScreen> {
       child: Container(
         width: size,
         height: size,
-        decoration: BoxDecoration(
-          color: bgColor,
-          border: Border(
-            right: BorderSide(color: c.divider, width: 0.5),
-            bottom: BorderSide(color: c.divider, width: 0.5),
-          ),
-        ),
+        color: bgColor,
         child: Center(
           child: value != 0
               ? Text(
@@ -911,24 +910,40 @@ class _HelpRule extends StatelessWidget {
 }
 
 class _GridPainter extends CustomPainter {
-  final Color color;
-  _GridPainter(this.color);
+  final Color thinColor;
+  final Color thickColor;
+  _GridPainter({required this.thinColor, required this.thickColor});
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = 2.0
-      ..style = PaintingStyle.stroke;
     final cellSize = size.width / 9;
-    for (int i = 0; i <= 3; i++) {
+
+    // Thin lines for individual cells
+    final thinPaint = Paint()
+      ..color = thinColor
+      ..strokeWidth = 0.5;
+
+    for (int i = 1; i < 9; i++) {
+      if (i % 3 == 0) continue; // skip box borders, drawn separately
+      double pos = i * cellSize;
+      canvas.drawLine(Offset(pos, 0), Offset(pos, size.height), thinPaint);
+      canvas.drawLine(Offset(0, pos), Offset(size.width, pos), thinPaint);
+    }
+
+    // Thick lines for 3x3 box borders (only inner ones: i=1,2)
+    final thickPaint = Paint()
+      ..color = thickColor
+      ..strokeWidth = 2.0;
+
+    for (int i = 1; i <= 2; i++) {
       double pos = i * cellSize * 3;
-      canvas.drawLine(Offset(pos, 0), Offset(pos, size.height), paint);
-      canvas.drawLine(Offset(0, pos), Offset(size.width, pos), paint);
+      canvas.drawLine(Offset(pos, 0), Offset(pos, size.height), thickPaint);
+      canvas.drawLine(Offset(0, pos), Offset(size.width, pos), thickPaint);
     }
   }
 
   @override
   bool shouldRepaint(covariant _GridPainter oldDelegate) =>
-      oldDelegate.color != color;
+      oldDelegate.thinColor != thinColor ||
+      oldDelegate.thickColor != thickColor;
 }
