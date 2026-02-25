@@ -77,13 +77,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 HSLColor.fromColor(c.accent).withLightness(0.3).toColor(),
               ],
             ),
-            boxShadow: [
-              BoxShadow(
-                color: c.accent.withValues(alpha: 0.3),
-                blurRadius: 20,
-                offset: const Offset(0, 8),
-              ),
-            ],
+            // boxShadow: [
+            //   BoxShadow(
+            //     color: c.accent.withValues(alpha: 0.3),
+            //     blurRadius: 10,
+            //     offset: const Offset(0, 1),
+            //   ),
+            // ],
           ),
           child: Row(
             children: [
@@ -230,13 +230,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
             end: Alignment.bottomRight,
             colors: [game.colorStart, game.colorEnd],
           ),
-          boxShadow: [
-            BoxShadow(
-              color: game.colorEnd.withValues(alpha: 0.3),
-              blurRadius: 12,
-              offset: const Offset(0, 6),
-            ),
-          ],
+          // boxShadow: [
+          //   BoxShadow(
+          //     color: game.colorEnd.withValues(alpha: 0.3),
+          //     blurRadius: 12,
+          //     offset: const Offset(0, 6),
+          //   ),
+          // ],
         ),
         child: Stack(
           children: [
