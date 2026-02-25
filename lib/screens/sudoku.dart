@@ -34,9 +34,9 @@ class SudokuScreenState extends State<SudokuScreen> {
   // Track errors
   List<List<bool>> _errors = List.generate(9, (_) => List.filled(9, false));
 
-  int _hintCount = 3;
+  int _hintCount = 81;
   int _mistakeCount = 0;
-  static const int _maxMistakes = 3;
+  static const int _maxMistakes = 81;
 
   void _startGame() {
     final board = _generateSudoku();
@@ -48,7 +48,7 @@ class SudokuScreenState extends State<SudokuScreen> {
     _fixed = List.generate(9, (_) => List.filled(9, false));
     _notes = List.generate(9, (_) => List.generate(9, (_) => <int>{}));
     _errors = List.generate(9, (_) => List.filled(9, false));
-    _hintCount = 3;
+    _hintCount = 81;
     _mistakeCount = 0;
 
     // Remove cells to create puzzle
