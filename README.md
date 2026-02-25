@@ -1,3 +1,3 @@
-# Sudoku Game
+# Brainiac Hub Game
 
-It's a Sudoku game made with Flutter. It's developed for free sudoku playing. Available for ios, macos and android.
+It's a Puzzle game made with Flutter for who enjoyed playing intelligence games. It's developed for free playing puzzles. Available for ios, macos and android.
