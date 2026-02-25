@@ -10,10 +10,10 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.appColors;
     return Scaffold(
-      backgroundColor: AppTheme.surfaceLight,
+      backgroundColor: c.surface,
       appBar: AppBar(
-        backgroundColor: AppTheme.surfaceLight,
         leading: IconButton(
           onPressed: () => context.pop(),
           icon: const Icon(CupertinoIcons.chevron_back, size: 24),
@@ -25,7 +25,7 @@ class AboutScreen extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 20),
-            _buildAppIcon(),
+            _buildAppIcon(c),
             const SizedBox(height: 20),
             Text(
               translate("puzzle_hub"),
@@ -37,17 +37,13 @@ class AboutScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyLarge,
             ),
             const SizedBox(height: 32),
-            _buildInfoCard(context),
+            _buildInfoCard(c),
             const SizedBox(height: 16),
-            _buildLinksCard(context),
+            _buildLinksCard(c),
             const SizedBox(height: 32),
-            const SizedBox(height: 6),
             Text(
               translate("copyright"),
-              style: const TextStyle(
-                fontSize: 12,
-                color: AppTheme.textSecondary,
-              ),
+              style: TextStyle(fontSize: 12, color: c.textSecondary),
             ),
             const SizedBox(height: 20),
           ],
@@ -56,20 +52,23 @@ class AboutScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAppIcon() {
+  Widget _buildAppIcon(AppColors c) {
     return Container(
       width: 100,
       height: 100,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(28),
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [AppTheme.primaryGreen, AppTheme.darkGreen],
+          colors: [
+            c.accent,
+            HSLColor.fromColor(c.accent).withLightness(0.3).toColor(),
+          ],
         ),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.primaryGreen.withValues(alpha: 0.3),
+            color: c.accent.withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -83,15 +82,15 @@ class AboutScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoCard(BuildContext context) {
+  Widget _buildInfoCard(AppColors c) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: c.card,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: c.shadow,
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -103,27 +102,29 @@ class AboutScreen extends StatelessWidget {
             FontAwesomeIcons.gamepad,
             translate("games_available"),
             translate("four_puzzles"),
+            c,
           ),
-          _divider(),
+          Divider(height: 1, indent: 72, endIndent: 20, color: c.divider),
           _infoTile(
             FontAwesomeIcons.code,
             translate("developer"),
             translate("developer_name"),
+            c,
           ),
         ],
       ),
     );
   }
 
-  Widget _buildLinksCard(BuildContext context) {
+  Widget _buildLinksCard(AppColors c) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: c.card,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: c.shadow,
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -134,26 +135,29 @@ class AboutScreen extends StatelessWidget {
           _linkTile(
             FontAwesomeIcons.star,
             translate("rate_the_app"),
-            AppTheme.warmOrange,
+            AppColors.gameOrange,
+            c,
           ),
-          _divider(),
+          Divider(height: 1, indent: 72, endIndent: 20, color: c.divider),
           _linkTile(
             FontAwesomeIcons.shareNodes,
             translate("share_with_friends"),
-            AppTheme.accentBlue,
+            AppColors.gameBlue,
+            c,
           ),
-          _divider(),
+          Divider(height: 1, indent: 72, endIndent: 20, color: c.divider),
           _linkTile(
             FontAwesomeIcons.envelope,
             translate("send_feedback"),
-            AppTheme.softPurple,
+            AppColors.gamePurple,
+            c,
           ),
         ],
       ),
     );
   }
 
-  Widget _infoTile(IconData icon, String title, String value) {
+  Widget _infoTile(IconData icon, String title, String value, AppColors c) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       child: Row(
@@ -162,32 +166,29 @@ class AboutScreen extends StatelessWidget {
             width: 38,
             height: 38,
             decoration: BoxDecoration(
-              color: AppTheme.lightGreen,
+              color: c.accentLight,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(icon, size: 16, color: AppTheme.darkGreen),
+            child: Icon(icon, size: 16, color: c.accent),
           ),
           const SizedBox(width: 14),
           Expanded(
             child: Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: AppTheme.textPrimary,
+                color: c.textPrimary,
               ),
             ),
           ),
-          Text(
-            value,
-            style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary),
-          ),
+          Text(value, style: TextStyle(fontSize: 13, color: c.textSecondary)),
         ],
       ),
     );
   }
 
-  Widget _linkTile(IconData icon, String title, Color color) {
+  Widget _linkTile(IconData icon, String title, Color color, AppColors c) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
       leading: Container(
@@ -201,26 +202,17 @@ class AboutScreen extends StatelessWidget {
       ),
       title: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w600,
-          color: AppTheme.textPrimary,
+          color: c.textPrimary,
         ),
       ),
-      trailing: const Icon(
+      trailing: Icon(
         FontAwesomeIcons.chevronRight,
         size: 12,
-        color: AppTheme.textSecondary,
+        color: c.textSecondary,
       ),
-    );
-  }
-
-  Widget _divider() {
-    return Divider(
-      height: 1,
-      indent: 72,
-      endIndent: 20,
-      color: Colors.grey.shade100,
     );
   }
 }

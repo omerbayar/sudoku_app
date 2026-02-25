@@ -6,7 +6,9 @@ import 'routes.dart';
 import 'theme/app_theme.dart';
 import 'localization/app_localization.dart';
 
-void main() {
+final AppearanceSettings appearanceSettings = AppearanceSettings();
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -14,6 +16,7 @@ void main() {
       statusBarIconBrightness: Brightness.dark,
     ),
   );
+  await appearanceSettings.load();
   runApp(const MyApp());
 }
 
@@ -52,19 +55,26 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      title: "Puzzle App",
-      theme: AppTheme.lightTheme,
-      routerConfig: router,
-      supportedLocales: AppLocalization.supportedLocales,
-      locale: _locale,
-      localizationsDelegates: [
-        AppLocalization.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
+    return ListenableBuilder(
+      listenable: appearanceSettings,
+      builder: (context, _) {
+        return MaterialApp.router(
+          debugShowCheckedModeBanner: false,
+          title: "Puzzle App",
+          theme: AppTheme.fromSettings(appearanceSettings, dark: false),
+          darkTheme: AppTheme.fromSettings(appearanceSettings, dark: true),
+          themeMode: appearanceSettings.flutterThemeMode,
+          routerConfig: router,
+          supportedLocales: AppLocalization.supportedLocales,
+          locale: _locale,
+          localizationsDelegates: [
+            AppLocalization.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+        );
+      },
     );
   }
 }

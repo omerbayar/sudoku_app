@@ -22,10 +22,10 @@ class ComingSoonScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.appColors;
     return Scaffold(
-      backgroundColor: AppTheme.surfaceLight,
+      backgroundColor: c.surface,
       appBar: AppBar(
-        backgroundColor: AppTheme.surfaceLight,
         leading: IconButton(
           onPressed: () => context.pop(),
           icon: const Icon(CupertinoIcons.chevron_back, size: 24),
@@ -103,15 +103,15 @@ class ComingSoonScreen extends StatelessWidget {
                   onPressed: () => context.pop(),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 14),
-                    side: BorderSide(color: Colors.grey.shade300),
+                    side: BorderSide(color: c.border),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Go Back',
                     style: TextStyle(
-                      color: AppTheme.textPrimary,
+                      color: c.textPrimary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

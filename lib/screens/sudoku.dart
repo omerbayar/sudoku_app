@@ -20,18 +20,13 @@ class SudokuScreenState extends State<SudokuScreen> {
   int? _selectedCol;
   bool _notesMode = false;
 
-  // 9x9 board: 0 means empty
   List<List<int>> _board = List.generate(9, (_) => List.filled(9, 0));
-  // Which cells are pre-filled (not editable)
   List<List<bool>> _fixed = List.generate(9, (_) => List.filled(9, false));
-  // Solution board
   List<List<int>> _solution = List.generate(9, (_) => List.filled(9, 0));
-  // Notes: each cell has a set of candidate numbers
   List<List<Set<int>>> _notes = List.generate(
     9,
     (_) => List.generate(9, (_) => <int>{}),
   );
-  // Track errors
   List<List<bool>> _errors = List.generate(9, (_) => List.filled(9, false));
 
   int _hintCount = 81;
@@ -42,7 +37,6 @@ class SudokuScreenState extends State<SudokuScreen> {
     final board = _generateSudoku();
     final clues = _getClueCount(_selectedDifficulty);
     final random = Random();
-
     _solution = board.map((r) => List<int>.from(r)).toList();
     _board = board.map((r) => List<int>.from(r)).toList();
     _fixed = List.generate(9, (_) => List.filled(9, false));
@@ -50,25 +44,19 @@ class SudokuScreenState extends State<SudokuScreen> {
     _errors = List.generate(9, (_) => List.filled(9, false));
     _hintCount = 81;
     _mistakeCount = 0;
-
-    // Remove cells to create puzzle
     int cellsToRemove = 81 - clues;
     while (cellsToRemove > 0) {
-      int r = random.nextInt(9);
-      int c = random.nextInt(9);
+      int r = random.nextInt(9), c = random.nextInt(9);
       if (_board[r][c] != 0) {
         _board[r][c] = 0;
         cellsToRemove--;
       }
     }
-
-    // Mark remaining cells as fixed
     for (int r = 0; r < 9; r++) {
       for (int c = 0; c < 9; c++) {
         _fixed[r][c] = _board[r][c] != 0;
       }
     }
-
     setState(() {
       _gameStarted = true;
       _selectedRow = null;
@@ -122,8 +110,7 @@ class SudokuScreenState extends State<SudokuScreen> {
     for (int i = 0; i < 9; i++) {
       if (grid[row][i] == num || grid[i][col] == num) return false;
     }
-    int boxRow = (row ~/ 3) * 3;
-    int boxCol = (col ~/ 3) * 3;
+    int boxRow = (row ~/ 3) * 3, boxCol = (col ~/ 3) * 3;
     for (int r = boxRow; r < boxRow + 3; r++) {
       for (int c = boxCol; c < boxCol + 3; c++) {
         if (grid[r][c] == num) return false;
@@ -133,13 +120,6 @@ class SudokuScreenState extends State<SudokuScreen> {
   }
 
   void _onCellTap(int row, int col) {
-    if (_fixed[row][col]) {
-      setState(() {
-        _selectedRow = row;
-        _selectedCol = col;
-      });
-      return;
-    }
     setState(() {
       _selectedRow = row;
       _selectedCol = col;
@@ -147,17 +127,15 @@ class SudokuScreenState extends State<SudokuScreen> {
   }
 
   void _onNumberInput(int number) {
-    if (_selectedRow == null || _selectedCol == null) return;
-    if (_fixed[_selectedRow!][_selectedCol!]) return;
-
+    if (_selectedRow == null ||
+        _selectedCol == null ||
+        _fixed[_selectedRow!][_selectedCol!]) {
+      return;
+    }
     setState(() {
       if (_notesMode) {
         final notes = _notes[_selectedRow!][_selectedCol!];
-        if (notes.contains(number)) {
-          notes.remove(number);
-        } else {
-          notes.add(number);
-        }
+        notes.contains(number) ? notes.remove(number) : notes.add(number);
         _board[_selectedRow!][_selectedCol!] = 0;
       } else {
         _notes[_selectedRow!][_selectedCol!].clear();
@@ -166,23 +144,24 @@ class SudokuScreenState extends State<SudokuScreen> {
           _errors[_selectedRow!][_selectedCol!] = true;
           _mistakeCount++;
           if (_mistakeCount >= _maxMistakes) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              _showGameOverDialog();
-            });
+            WidgetsBinding.instance.addPostFrameCallback(
+              (_) => _showGameOverDialog(),
+            );
           }
         } else {
           _errors[_selectedRow!][_selectedCol!] = false;
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            _checkWin();
-          });
+          WidgetsBinding.instance.addPostFrameCallback((_) => _checkWin());
         }
       }
     });
   }
 
   void _onErase() {
-    if (_selectedRow == null || _selectedCol == null) return;
-    if (_fixed[_selectedRow!][_selectedCol!]) return;
+    if (_selectedRow == null ||
+        _selectedCol == null ||
+        _fixed[_selectedRow!][_selectedCol!]) {
+      return;
+    }
     setState(() {
       _board[_selectedRow!][_selectedCol!] = 0;
       _notes[_selectedRow!][_selectedCol!].clear();
@@ -192,7 +171,6 @@ class SudokuScreenState extends State<SudokuScreen> {
 
   void _onHint() {
     if (_hintCount <= 0) return;
-    // Find an empty or wrong cell
     List<List<int>> emptyCells = [];
     for (int r = 0; r < 9; r++) {
       for (int c = 0; c < 9; c++) {
@@ -227,13 +205,13 @@ class SudokuScreenState extends State<SudokuScreen> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (dialogContext) => AlertDialog(
+      builder: (dc) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Row(
           children: [
             const Icon(
               FontAwesomeIcons.trophy,
-              color: AppTheme.warmOrange,
+              color: AppColors.gameOrange,
               size: 24,
             ),
             const SizedBox(width: 12),
@@ -244,7 +222,7 @@ class SudokuScreenState extends State<SudokuScreen> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(dialogContext).pop();
+              Navigator.of(dc).pop();
               if (mounted) setState(() => _gameStarted = false);
             },
             child: Text(translate("new_game")),
@@ -259,7 +237,7 @@ class SudokuScreenState extends State<SudokuScreen> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (dialogContext) => AlertDialog(
+      builder: (dc) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Row(
           children: [
@@ -276,7 +254,7 @@ class SudokuScreenState extends State<SudokuScreen> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(dialogContext).pop();
+              Navigator.of(dc).pop();
               if (mounted) setState(() => _gameStarted = false);
             },
             child: Text(translate("ok")),
@@ -287,9 +265,10 @@ class SudokuScreenState extends State<SudokuScreen> {
   }
 
   void _showHelpDialog() {
+    final c = context.appColors;
     showDialog(
       context: context,
-      builder: (dialogContext) => Dialog(
+      builder: (dc) => Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         child: Container(
           constraints: const BoxConstraints(maxWidth: 400),
@@ -305,13 +284,13 @@ class SudokuScreenState extends State<SudokuScreen> {
                       width: 44,
                       height: 44,
                       decoration: BoxDecoration(
-                        color: AppTheme.lightGreen,
+                        color: c.accentLight,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         FontAwesomeIcons.circleQuestion,
                         size: 20,
-                        color: AppTheme.darkGreen,
+                        color: c.accent,
                       ),
                     ),
                     const SizedBox(width: 14),
@@ -321,15 +300,15 @@ class SudokuScreenState extends State<SudokuScreen> {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
-                          color: AppTheme.textPrimary,
+                          color: c.textPrimary,
                         ),
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => Navigator.of(dialogContext).pop(),
-                      child: const Icon(
+                      onTap: () => Navigator.of(dc).pop(),
+                      child: Icon(
                         CupertinoIcons.xmark_circle_fill,
-                        color: AppTheme.textSecondary,
+                        color: c.textSecondary,
                         size: 28,
                       ),
                     ),
@@ -339,7 +318,7 @@ class SudokuScreenState extends State<SudokuScreen> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: AppTheme.lightGreen.withValues(alpha: 0.5),
+                    color: c.accentLight,
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: Column(
@@ -347,19 +326,19 @@ class SudokuScreenState extends State<SudokuScreen> {
                     children: [
                       Text(
                         translate("short_history"),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
-                          color: AppTheme.darkGreen,
+                          color: c.accent,
                         ),
                       ),
                       const SizedBox(height: 8),
                       Text(
                         translate("sudoku_history"),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
                           height: 1.5,
-                          color: AppTheme.textPrimary,
+                          color: c.textPrimary,
                         ),
                       ),
                     ],
@@ -369,19 +348,19 @@ class SudokuScreenState extends State<SudokuScreen> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: c.card,
                     borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: Colors.grey.shade200),
+                    border: Border.all(color: c.border),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         translate("how_to_play"),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
-                          color: AppTheme.textPrimary,
+                          color: c.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -399,7 +378,7 @@ class SudokuScreenState extends State<SudokuScreen> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: AppTheme.accentBlue.withValues(alpha: 0.08),
+                    color: AppColors.gameBlue.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: Column(
@@ -410,7 +389,7 @@ class SudokuScreenState extends State<SudokuScreen> {
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
-                          color: AppTheme.accentBlue,
+                          color: AppColors.gameBlue,
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -419,7 +398,7 @@ class SudokuScreenState extends State<SudokuScreen> {
                         style: TextStyle(
                           fontSize: 13,
                           height: 1.6,
-                          color: AppTheme.textPrimary,
+                          color: c.textPrimary,
                         ),
                       ),
                     ],
@@ -435,10 +414,10 @@ class SudokuScreenState extends State<SudokuScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.appColors;
     return Scaffold(
-      backgroundColor: AppTheme.surfaceLight,
+      backgroundColor: c.surface,
       appBar: AppBar(
-        backgroundColor: AppTheme.surfaceLight,
         leading: IconButton(
           onPressed: () => context.pop(),
           icon: const Icon(CupertinoIcons.chevron_back, size: 24),
@@ -457,21 +436,21 @@ class SudokuScreenState extends State<SudokuScreen> {
           children: [
             if (!_gameStarted) ...[
               const SizedBox(height: 8),
-              _buildDifficultySelector(),
+              _buildDifficultySelector(c),
               const SizedBox(height: 24),
-              _buildPlaceholderBoard(),
+              _buildPlaceholderBoard(c),
               const SizedBox(height: 24),
               _buildStartButton(),
               const SizedBox(height: 20),
             ] else ...[
               const SizedBox(height: 4),
-              _buildGameInfo(),
+              _buildGameInfo(c),
               const SizedBox(height: 12),
-              _buildBoard(),
+              _buildBoard(c),
               const SizedBox(height: 12),
-              _buildActionBar(),
+              _buildActionBar(c),
               const SizedBox(height: 8),
-              _buildNumberPad(),
+              _buildNumberPad(c),
               const SizedBox(height: 12),
             ],
           ],
@@ -480,22 +459,22 @@ class SudokuScreenState extends State<SudokuScreen> {
     );
   }
 
-  Widget _buildGameInfo() {
+  Widget _buildGameInfo(AppColors c) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: AppTheme.lightGreen,
+            color: c.accentLight,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Text(
             _selectedDifficulty,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: AppTheme.darkGreen,
+              color: c.accent,
             ),
           ),
         ),
@@ -505,10 +484,10 @@ class SudokuScreenState extends State<SudokuScreen> {
             const SizedBox(width: 4),
             Text(
               '$_mistakeCount / $_maxMistakes',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: AppTheme.textPrimary,
+                color: c.textPrimary,
               ),
             ),
           ],
@@ -517,16 +496,16 @@ class SudokuScreenState extends State<SudokuScreen> {
     );
   }
 
-  Widget _buildDifficultySelector() {
+  Widget _buildDifficultySelector(AppColors c) {
     final difficulties = ['Easy', 'Medium', 'Hard', 'Expert'];
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: c.card,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: c.shadow,
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -534,7 +513,7 @@ class SudokuScreenState extends State<SudokuScreen> {
       ),
       child: Row(
         children: difficulties.map((d) {
-          final isSelected = d == _selectedDifficulty;
+          final sel = d == _selectedDifficulty;
           return Expanded(
             child: GestureDetector(
               onTap: () => setState(() => _selectedDifficulty = d),
@@ -542,9 +521,7 @@ class SudokuScreenState extends State<SudokuScreen> {
                 duration: const Duration(milliseconds: 200),
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 decoration: BoxDecoration(
-                  color: isSelected
-                      ? AppTheme.primaryGreen
-                      : Colors.transparent,
+                  color: sel ? c.accent : Colors.transparent,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
@@ -552,8 +529,8 @@ class SudokuScreenState extends State<SudokuScreen> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 13,
-                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                    color: isSelected ? Colors.white : AppTheme.textSecondary,
+                    fontWeight: sel ? FontWeight.w600 : FontWeight.w500,
+                    color: sel ? Colors.white : c.textSecondary,
                   ),
                 ),
               ),
@@ -564,16 +541,16 @@ class SudokuScreenState extends State<SudokuScreen> {
     );
   }
 
-  Widget _buildPlaceholderBoard() {
+  Widget _buildPlaceholderBoard(AppColors c) {
     return Expanded(
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: c.card,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
+              color: c.shadow,
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -586,14 +563,14 @@ class SudokuScreenState extends State<SudokuScreen> {
               Icon(
                 FontAwesomeIcons.tableCells,
                 size: 64,
-                color: AppTheme.primaryGreen.withValues(alpha: 0.3),
+                color: c.accent.withValues(alpha: 0.3),
               ),
               const SizedBox(height: 16),
               Text(
                 'Sudoku Board',
                 style: Theme.of(
                   context,
-                ).textTheme.titleLarge?.copyWith(color: AppTheme.textSecondary),
+                ).textTheme.titleLarge?.copyWith(color: c.textSecondary),
               ),
               const SizedBox(height: 8),
               Text(
@@ -626,17 +603,16 @@ class SudokuScreenState extends State<SudokuScreen> {
     );
   }
 
-  Widget _buildBoard() {
+  Widget _buildBoard(AppColors c) {
     final boardSize = MediaQuery.of(context).size.width - 32;
     final cellSize = boardSize / 9;
-
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: c.card,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
+            color: c.shadowMedium,
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -649,21 +625,21 @@ class SudokuScreenState extends State<SudokuScreen> {
           height: boardSize,
           child: Stack(
             children: [
-              // Cells
               Column(
-                children: List.generate(9, (row) {
-                  return Row(
-                    children: List.generate(9, (col) {
-                      return _buildCell(row, col, cellSize);
-                    }),
-                  );
-                }),
+                children: List.generate(
+                  9,
+                  (row) => Row(
+                    children: List.generate(
+                      9,
+                      (col) => _buildCell(row, col, cellSize, c),
+                    ),
+                  ),
+                ),
               ),
-              // 3x3 box borders
               IgnorePointer(
                 child: CustomPaint(
                   size: Size(boardSize, boardSize),
-                  painter: _GridPainter(),
+                  painter: _GridPainter(c.accent),
                 ),
               ),
             ],
@@ -673,44 +649,33 @@ class SudokuScreenState extends State<SudokuScreen> {
     );
   }
 
-  Widget _buildCell(int row, int col, double size) {
+  Widget _buildCell(int row, int col, double size, AppColors c) {
     final isSelected = row == _selectedRow && col == _selectedCol;
     final isFixed = _fixed[row][col];
     final value = _board[row][col];
     final hasError = _errors[row][col];
     final notes = _notes[row][col];
-
-    // Highlight same row/col/box as selected
     bool isHighlighted = false;
     if (_selectedRow != null && _selectedCol != null) {
-      if (row == _selectedRow || col == _selectedCol) {
-        isHighlighted = true;
-      }
-      int selBoxR = (_selectedRow! ~/ 3) * 3;
-      int selBoxC = (_selectedCol! ~/ 3) * 3;
-      int cellBoxR = (row ~/ 3) * 3;
-      int cellBoxC = (col ~/ 3) * 3;
-      if (selBoxR == cellBoxR && selBoxC == cellBoxC) {
+      if (row == _selectedRow || col == _selectedCol) isHighlighted = true;
+      int selBoxR = (_selectedRow! ~/ 3) * 3,
+          selBoxC = (_selectedCol! ~/ 3) * 3;
+      if ((row ~/ 3) * 3 == selBoxR && (col ~/ 3) * 3 == selBoxC) {
         isHighlighted = true;
       }
     }
-
-    // Highlight same number
     bool isSameNumber = false;
     if (_selectedRow != null && _selectedCol != null) {
-      int selectedVal = _board[_selectedRow!][_selectedCol!];
-      if (selectedVal != 0 && value == selectedVal) {
-        isSameNumber = true;
-      }
+      int sv = _board[_selectedRow!][_selectedCol!];
+      if (sv != 0 && value == sv) isSameNumber = true;
     }
-
-    Color bgColor = Colors.white;
+    Color bgColor = c.card;
     if (isSelected) {
-      bgColor = AppTheme.primaryGreen.withValues(alpha: 0.2);
+      bgColor = c.accent.withValues(alpha: 0.2);
     } else if (isSameNumber) {
-      bgColor = AppTheme.primaryGreen.withValues(alpha: 0.1);
+      bgColor = c.accent.withValues(alpha: 0.1);
     } else if (isHighlighted) {
-      bgColor = AppTheme.surfaceLight;
+      bgColor = c.surface;
     }
 
     return GestureDetector(
@@ -721,8 +686,8 @@ class SudokuScreenState extends State<SudokuScreen> {
         decoration: BoxDecoration(
           color: bgColor,
           border: Border(
-            right: BorderSide(color: Colors.grey.shade300, width: 0.5),
-            bottom: BorderSide(color: Colors.grey.shade300, width: 0.5),
+            right: BorderSide(color: c.divider, width: 0.5),
+            bottom: BorderSide(color: c.divider, width: 0.5),
           ),
         ),
         child: Center(
@@ -735,19 +700,19 @@ class SudokuScreenState extends State<SudokuScreen> {
                     color: hasError
                         ? Colors.red
                         : isFixed
-                        ? AppTheme.textPrimary
-                        : AppTheme.primaryGreen,
+                        ? c.textPrimary
+                        : c.accent,
                   ),
                 )
               : notes.isNotEmpty
-              ? _buildNotesGrid(notes, size)
+              ? _buildNotesGrid(notes, size, c)
               : null,
         ),
       ),
     );
   }
 
-  Widget _buildNotesGrid(Set<int> notes, double cellSize) {
+  Widget _buildNotesGrid(Set<int> notes, double cellSize, AppColors c) {
     final noteSize = cellSize / 3;
     return SizedBox(
       width: cellSize,
@@ -763,7 +728,7 @@ class SudokuScreenState extends State<SudokuScreen> {
                 notes.contains(num) ? '$num' : '',
                 style: TextStyle(
                   fontSize: noteSize * 0.6,
-                  color: AppTheme.textSecondary,
+                  color: c.textSecondary,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -774,7 +739,7 @@ class SudokuScreenState extends State<SudokuScreen> {
     );
   }
 
-  Widget _buildActionBar() {
+  Widget _buildActionBar(AppColors c) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -782,22 +747,26 @@ class SudokuScreenState extends State<SudokuScreen> {
           icon: FontAwesomeIcons.eraser,
           label: translate("erase"),
           onTap: _onErase,
+          c: c,
         ),
         _buildActionButton(
           icon: FontAwesomeIcons.pencil,
           label: translate("notes"),
           onTap: () => setState(() => _notesMode = !_notesMode),
           isActive: _notesMode,
+          c: c,
         ),
         _buildActionButton(
           icon: FontAwesomeIcons.lightbulb,
           label: translate("hint_count", {"count": _hintCount.toString()}),
           onTap: _onHint,
+          c: c,
         ),
         _buildActionButton(
           icon: FontAwesomeIcons.arrowRotateLeft,
           label: translate("restart"),
           onTap: () => setState(() => _gameStarted = false),
+          c: c,
         ),
       ],
     );
@@ -807,6 +776,7 @@ class SudokuScreenState extends State<SudokuScreen> {
     required IconData icon,
     required String label,
     required VoidCallback onTap,
+    required AppColors c,
     bool isActive = false,
   }) {
     return GestureDetector(
@@ -817,11 +787,11 @@ class SudokuScreenState extends State<SudokuScreen> {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: isActive ? AppTheme.primaryGreen : Colors.white,
+              color: isActive ? c.accent : c.card,
               borderRadius: BorderRadius.circular(14),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.04),
+                  color: c.shadow,
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -830,15 +800,15 @@ class SudokuScreenState extends State<SudokuScreen> {
             child: Icon(
               icon,
               size: 18,
-              color: isActive ? Colors.white : AppTheme.textSecondary,
+              color: isActive ? Colors.white : c.textSecondary,
             ),
           ),
           const SizedBox(height: 4),
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 11,
-              color: AppTheme.textSecondary,
+              color: c.textSecondary,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -847,15 +817,15 @@ class SudokuScreenState extends State<SudokuScreen> {
     );
   }
 
-  Widget _buildNumberPad() {
+  Widget _buildNumberPad(AppColors c) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: c.card,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: c.shadow,
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -865,38 +835,31 @@ class SudokuScreenState extends State<SudokuScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: List.generate(9, (i) {
           final num = i + 1;
-          // Count how many of this number are placed
           int count = 0;
           for (int r = 0; r < 9; r++) {
-            for (int c = 0; c < 9; c++) {
-              if (_board[r][c] == num) count++;
+            for (int cc = 0; cc < 9; cc++) {
+              if (_board[r][cc] == num) count++;
             }
           }
           final isComplete = count >= 9;
-
           return GestureDetector(
             onTap: isComplete ? null : () => _onNumberInput(num),
             child: Container(
               width: 34,
               height: 50,
               decoration: BoxDecoration(
-                color: isComplete ? Colors.grey.shade100 : Colors.transparent,
+                color: isComplete ? c.divider : Colors.transparent,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '$num',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      color: isComplete
-                          ? Colors.grey.shade400
-                          : AppTheme.textPrimary,
-                    ),
+              child: Center(
+                child: Text(
+                  '$num',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: isComplete ? c.textSecondary : c.textPrimary,
                   ),
-                ],
+                ),
               ),
             ),
           );
@@ -909,11 +872,11 @@ class SudokuScreenState extends State<SudokuScreen> {
 class _HelpRule extends StatelessWidget {
   final String number;
   final String text;
-
   const _HelpRule({required this.number, required this.text});
 
   @override
   Widget build(BuildContext context) {
+    final c = context.appColors;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -921,7 +884,7 @@ class _HelpRule extends StatelessWidget {
           width: 22,
           height: 22,
           decoration: BoxDecoration(
-            color: AppTheme.primaryGreen,
+            color: c.accent,
             borderRadius: BorderRadius.circular(6),
           ),
           child: Center(
@@ -939,11 +902,7 @@ class _HelpRule extends StatelessWidget {
         Expanded(
           child: Text(
             text,
-            style: const TextStyle(
-              fontSize: 13,
-              height: 1.4,
-              color: AppTheme.textPrimary,
-            ),
+            style: TextStyle(fontSize: 13, height: 1.4, color: c.textPrimary),
           ),
         ),
       ],
@@ -952,16 +911,16 @@ class _HelpRule extends StatelessWidget {
 }
 
 class _GridPainter extends CustomPainter {
+  final Color color;
+  _GridPainter(this.color);
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFF2E7D32)
+      ..color = color
       ..strokeWidth = 2.0
       ..style = PaintingStyle.stroke;
-
     final cellSize = size.width / 9;
-
-    // Draw 3x3 box borders
     for (int i = 0; i <= 3; i++) {
       double pos = i * cellSize * 3;
       canvas.drawLine(Offset(pos, 0), Offset(pos, size.height), paint);
@@ -970,5 +929,6 @@ class _GridPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _GridPainter oldDelegate) =>
+      oldDelegate.color != color;
 }

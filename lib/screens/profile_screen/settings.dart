@@ -16,12 +16,12 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
+    final c = context.appColors;
     final currentLocale = Localizations.localeOf(context).languageCode;
 
     return Scaffold(
-      backgroundColor: AppTheme.surfaceLight,
+      backgroundColor: c.surface,
       appBar: AppBar(
-        backgroundColor: AppTheme.surfaceLight,
         leading: IconButton(
           onPressed: () => context.pop(),
           icon: const Icon(CupertinoIcons.chevron_back, size: 24),
@@ -32,35 +32,38 @@ class _SettingsScreenState extends State<SettingsScreen> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            _buildSection([_buildLanguageTile(currentLocale)]),
+            _buildSection([_buildLanguageTile(currentLocale, c)], c),
             const SizedBox(height: 16),
             _buildSection([
               _buildTile(
                 FontAwesomeIcons.palette,
                 translate("appearance"),
                 translate("theme_display"),
+                onTap: () => context.push('/profile/appearance'),
+                c: c,
               ),
-              _divider(),
+              Divider(height: 1, indent: 76, endIndent: 20, color: c.divider),
               _buildTile(
                 FontAwesomeIcons.bell,
                 translate("notifications"),
                 translate("reminders_alerts"),
+                c: c,
               ),
-            ]),
+            ], c),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildSection(List<Widget> children) {
+  Widget _buildSection(List<Widget> children, AppColors c) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: c.card,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: c.shadow,
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -70,86 +73,82 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildLanguageTile(String currentLocale) {
+  Widget _buildLanguageTile(String currentLocale, AppColors c) {
     final languageLabel = currentLocale == 'tr' ? 'Türkçe' : 'English';
-
     return ListTile(
-      onTap: () => _showLanguagePicker(currentLocale),
+      onTap: () => _showLanguagePicker(currentLocale, c),
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
       leading: Container(
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          color: AppTheme.lightGreen,
+          color: c.accentLight,
           borderRadius: BorderRadius.circular(12),
         ),
-        child: const Icon(
-          FontAwesomeIcons.language,
-          size: 18,
-          color: AppTheme.darkGreen,
-        ),
+        child: Icon(FontAwesomeIcons.language, size: 18, color: c.accent),
       ),
       title: Text(
         translate("language"),
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 15,
           fontWeight: FontWeight.w600,
-          color: AppTheme.textPrimary,
+          color: c.textPrimary,
         ),
       ),
       subtitle: Text(
         languageLabel,
-        style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary),
+        style: TextStyle(fontSize: 13, color: c.textSecondary),
       ),
-      trailing: const Icon(
+      trailing: Icon(
         FontAwesomeIcons.chevronRight,
         size: 14,
-        color: AppTheme.textSecondary,
+        color: c.textSecondary,
       ),
     );
   }
 
-  void _showLanguagePicker(String currentLocale) {
+  void _showLanguagePicker(String currentLocale, AppColors c) {
     showModalBottomSheet(
       context: context,
+      backgroundColor: c.card,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      builder: (ctx) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  translate("select_language"),
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: AppTheme.textPrimary,
-                  ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                translate("select_language"),
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: c.textPrimary,
                 ),
-                const SizedBox(height: 16),
-                _buildLanguageOption(
-                  'English',
-                  '🇬🇧',
-                  'en',
-                  currentLocale == 'en',
-                ),
-                const SizedBox(height: 8),
-                _buildLanguageOption(
-                  'Türkçe',
-                  '🇹🇷',
-                  'tr',
-                  currentLocale == 'tr',
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 16),
+              _buildLanguageOption(
+                'English',
+                '🇬🇧',
+                'en',
+                currentLocale == 'en',
+                c,
+              ),
+              const SizedBox(height: 8),
+              _buildLanguageOption(
+                'Türkçe',
+                '🇹🇷',
+                'tr',
+                currentLocale == 'tr',
+                c,
+              ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
@@ -158,6 +157,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     String flag,
     String langCode,
     bool isSelected,
+    AppColors c,
   ) {
     return GestureDetector(
       onTap: () {
@@ -167,12 +167,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
-          color: isSelected
-              ? AppTheme.primaryGreen.withValues(alpha: 0.1)
-              : Colors.grey.shade50,
+          color: isSelected ? c.accent.withValues(alpha: 0.1) : c.cardElevated,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: isSelected ? AppTheme.primaryGreen : Colors.grey.shade200,
+            color: isSelected ? c.accent : c.border,
             width: isSelected ? 1.5 : 1,
           ),
         ),
@@ -186,62 +184,54 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                  color: isSelected
-                      ? AppTheme.primaryGreen
-                      : AppTheme.textPrimary,
+                  color: isSelected ? c.accent : c.textPrimary,
                 ),
               ),
             ),
             if (isSelected)
-              const Icon(
-                FontAwesomeIcons.circleCheck,
-                size: 20,
-                color: AppTheme.primaryGreen,
-              ),
+              Icon(FontAwesomeIcons.circleCheck, size: 20, color: c.accent),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTile(IconData icon, String title, String subtitle) {
+  Widget _buildTile(
+    IconData icon,
+    String title,
+    String subtitle, {
+    VoidCallback? onTap,
+    required AppColors c,
+  }) {
     return ListTile(
+      onTap: onTap,
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
       leading: Container(
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          color: AppTheme.lightGreen,
+          color: c.accentLight,
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Icon(icon, size: 18, color: AppTheme.darkGreen),
+        child: Icon(icon, size: 18, color: c.accent),
       ),
       title: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 15,
           fontWeight: FontWeight.w600,
-          color: AppTheme.textPrimary,
+          color: c.textPrimary,
         ),
       ),
       subtitle: Text(
         subtitle,
-        style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary),
+        style: TextStyle(fontSize: 13, color: c.textSecondary),
       ),
-      trailing: const Icon(
+      trailing: Icon(
         FontAwesomeIcons.chevronRight,
         size: 14,
-        color: AppTheme.textSecondary,
+        color: c.textSecondary,
       ),
-    );
-  }
-
-  Widget _divider() {
-    return Divider(
-      height: 1,
-      indent: 76,
-      endIndent: 20,
-      color: Colors.grey.shade100,
     );
   }
 }

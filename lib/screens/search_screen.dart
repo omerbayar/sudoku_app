@@ -19,7 +19,7 @@ class _SearchScreenState extends State<SearchScreen> {
       'Sudoku',
       'Classic number puzzle',
       FontAwesomeIcons.tableCells,
-      AppTheme.accentBlue,
+      AppColors.gameBlue,
       true,
       '/sudokuScreen',
       'Logic',
@@ -28,7 +28,7 @@ class _SearchScreenState extends State<SearchScreen> {
       'Word Hunt',
       'Find hidden words',
       FontAwesomeIcons.font,
-      AppTheme.softPurple,
+      AppColors.gamePurple,
       false,
       '/word-hunt',
       'Words',
@@ -37,7 +37,7 @@ class _SearchScreenState extends State<SearchScreen> {
       'Memory',
       'Test your memory',
       FontAwesomeIcons.brain,
-      AppTheme.warmOrange,
+      AppColors.gameOrange,
       false,
       '/memory',
       'Brain',
@@ -46,7 +46,7 @@ class _SearchScreenState extends State<SearchScreen> {
       'Maze',
       'Find the exit',
       FontAwesomeIcons.route,
-      Color(0xFF26A69A),
+      AppColors.gameTeal,
       false,
       '/maze',
       'Strategy',
@@ -65,14 +65,14 @@ class _SearchScreenState extends State<SearchScreen> {
     final query = _searchController.text.toLowerCase();
     setState(() {
       _filteredGames = _allGames.where((g) {
-        final matchesQuery =
+        final matchQ =
             query.isEmpty ||
             g.title.toLowerCase().contains(query) ||
             g.subtitle.toLowerCase().contains(query) ||
             g.category.toLowerCase().contains(query);
-        final matchesCategory =
+        final matchC =
             _selectedCategory == 'All' || g.category == _selectedCategory;
-        return matchesQuery && matchesCategory;
+        return matchQ && matchC;
       }).toList();
     });
   }
@@ -85,8 +85,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.appColors;
     return Scaffold(
-      backgroundColor: AppTheme.surfaceLight,
+      backgroundColor: c.surface,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -101,13 +102,13 @@ class _SearchScreenState extends State<SearchScreen> {
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(height: 20),
-              _buildSearchBar(),
+              _buildSearchBar(c),
               const SizedBox(height: 16),
-              _buildCategoryChips(),
+              _buildCategoryChips(c),
               const SizedBox(height: 20),
-              _buildResultsHeader(),
+              _buildResultsHeader(c),
               const SizedBox(height: 12),
-              Expanded(child: _buildGameList()),
+              Expanded(child: _buildGameList(c)),
             ],
           ),
         ),
@@ -115,19 +116,19 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _buildSearchBar() {
+  Widget _buildSearchBar(AppColors c) {
     return TextField(
       controller: _searchController,
       onChanged: (_) => _applyFilters(),
       decoration: InputDecoration(
         hintText: 'Search puzzles...',
-        hintStyle: const TextStyle(color: AppTheme.textSecondary),
-        prefixIcon: const Padding(
-          padding: EdgeInsets.only(left: 14, right: 10),
+        hintStyle: TextStyle(color: c.textSecondary),
+        prefixIcon: Padding(
+          padding: const EdgeInsets.only(left: 14, right: 10),
           child: Icon(
             FontAwesomeIcons.magnifyingGlass,
             size: 16,
-            color: AppTheme.textSecondary,
+            color: c.textSecondary,
           ),
         ),
         prefixIconConstraints: const BoxConstraints(minWidth: 40),
@@ -144,7 +145,7 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _buildCategoryChips() {
+  Widget _buildCategoryChips(AppColors c) {
     final categories = ['All', 'Logic', 'Words', 'Brain', 'Strategy'];
     return SizedBox(
       height: 38,
@@ -154,7 +155,7 @@ class _SearchScreenState extends State<SearchScreen> {
         separatorBuilder: (_, __) => const SizedBox(width: 8),
         itemBuilder: (context, index) {
           final cat = categories[index];
-          final isSelected = cat == _selectedCategory;
+          final sel = cat == _selectedCategory;
           return GestureDetector(
             onTap: () {
               _selectedCategory = cat;
@@ -164,21 +165,17 @@ class _SearchScreenState extends State<SearchScreen> {
               duration: const Duration(milliseconds: 200),
               padding: const EdgeInsets.symmetric(horizontal: 18),
               decoration: BoxDecoration(
-                color: isSelected ? AppTheme.primaryGreen : Colors.white,
+                color: sel ? c.accent : c.card,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: isSelected
-                      ? AppTheme.primaryGreen
-                      : Colors.grey.shade200,
-                ),
+                border: Border.all(color: sel ? c.accent : c.border),
               ),
               alignment: Alignment.center,
               child: Text(
                 cat,
                 style: TextStyle(
                   fontSize: 13,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                  color: isSelected ? Colors.white : AppTheme.textSecondary,
+                  fontWeight: sel ? FontWeight.w600 : FontWeight.w500,
+                  color: sel ? Colors.white : c.textSecondary,
                 ),
               ),
             ),
@@ -188,7 +185,7 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _buildResultsHeader() {
+  Widget _buildResultsHeader(AppColors c) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -198,13 +195,13 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
         Text(
           '${_filteredGames.length} ${_filteredGames.length == 1 ? 'game' : 'games'}',
-          style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary),
+          style: TextStyle(fontSize: 13, color: c.textSecondary),
         ),
       ],
     );
   }
 
-  Widget _buildGameList() {
+  Widget _buildGameList(AppColors c) {
     if (_filteredGames.isEmpty) {
       return Center(
         child: Column(
@@ -213,45 +210,44 @@ class _SearchScreenState extends State<SearchScreen> {
             Icon(
               FontAwesomeIcons.faceSadTear,
               size: 48,
-              color: Colors.grey.shade300,
+              color: c.textSecondary.withValues(alpha: 0.4),
             ),
             const SizedBox(height: 16),
-            const Text(
+            Text(
               'No games found',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: AppTheme.textPrimary,
+                color: c.textPrimary,
               ),
             ),
             const SizedBox(height: 6),
-            const Text(
+            Text(
               'Try a different search or category',
-              style: TextStyle(color: AppTheme.textSecondary),
+              style: TextStyle(color: c.textSecondary),
             ),
           ],
         ),
       );
     }
-
     return ListView.separated(
       itemCount: _filteredGames.length,
       separatorBuilder: (_, __) => const SizedBox(height: 10),
-      itemBuilder: (context, index) => _buildGameTile(_filteredGames[index]),
+      itemBuilder: (context, index) => _buildGameTile(_filteredGames[index], c),
     );
   }
 
-  Widget _buildGameTile(_SearchGameItem game) {
+  Widget _buildGameTile(_SearchGameItem game, AppColors c) {
     return GestureDetector(
       onTap: () => context.push(game.route),
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: c.card,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
+              color: c.shadow,
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -277,10 +273,10 @@ class _SearchScreenState extends State<SearchScreen> {
                     children: [
                       Text(
                         game.title,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
-                          color: AppTheme.textPrimary,
+                          color: c.textPrimary,
                         ),
                       ),
                       if (!game.isAvailable) ...[
@@ -291,14 +287,14 @@ class _SearchScreenState extends State<SearchScreen> {
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
+                            color: c.divider,
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child: const Text(
+                          child: Text(
                             'Soon',
                             style: TextStyle(
                               fontSize: 10,
-                              color: AppTheme.textSecondary,
+                              color: c.textSecondary,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -309,10 +305,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   const SizedBox(height: 3),
                   Text(
                     game.subtitle,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: AppTheme.textSecondary,
-                    ),
+                    style: TextStyle(fontSize: 13, color: c.textSecondary),
                   ),
                 ],
               ),
@@ -323,13 +316,13 @@ class _SearchScreenState extends State<SearchScreen> {
               decoration: BoxDecoration(
                 color: game.isAvailable
                     ? game.color.withValues(alpha: 0.1)
-                    : Colors.grey.shade50,
+                    : c.divider,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
                 FontAwesomeIcons.chevronRight,
                 size: 12,
-                color: game.isAvailable ? game.color : AppTheme.textSecondary,
+                color: game.isAvailable ? game.color : c.textSecondary,
               ),
             ),
           ],
@@ -340,14 +333,10 @@ class _SearchScreenState extends State<SearchScreen> {
 }
 
 class _SearchGameItem {
-  final String title;
-  final String subtitle;
+  final String title, subtitle, category, route;
   final IconData icon;
   final Color color;
   final bool isAvailable;
-  final String route;
-  final String category;
-
   const _SearchGameItem(
     this.title,
     this.subtitle,

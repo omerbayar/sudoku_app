@@ -5,6 +5,7 @@ import 'screens/dashboard.dart';
 import 'screens/sudoku.dart';
 import 'screens/profile_screen/profile.dart';
 import 'screens/profile_screen/about.dart';
+import 'screens/profile_screen/appearance.dart';
 import 'screens/profile_screen/settings.dart';
 import 'screens/search_screen.dart';
 import 'screens/coming_soon_screen.dart';
@@ -36,6 +37,10 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: '/profile/settings',
           builder: (context, state) => const SettingsScreen(),
+        ),
+        GoRoute(
+          path: '/profile/appearance',
+          builder: (context, state) => const AppearanceScreen(),
         ),
         GoRoute(
           path: '/sudokuScreen',
@@ -89,7 +94,7 @@ class ScaffoldWithNavBar extends StatelessWidget {
       body: child,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).cardTheme.color,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.05),

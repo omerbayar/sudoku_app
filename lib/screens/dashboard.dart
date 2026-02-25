@@ -14,16 +14,17 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
+    final c = context.appColors;
     return Scaffold(
-      backgroundColor: AppTheme.surfaceLight,
+      backgroundColor: c.surface,
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            SliverToBoxAdapter(child: _buildHeader()),
-            SliverToBoxAdapter(child: _buildFeaturedCard()),
+            SliverToBoxAdapter(child: _buildHeader(c)),
+            SliverToBoxAdapter(child: _buildFeaturedCard(c)),
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
-              sliver: _buildGameGrid(),
+              sliver: _buildGameGrid(c),
             ),
           ],
         ),
@@ -31,42 +32,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(AppColors c) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    translate("wassup_welcome"),
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    translate("brainiac_hub"),
-                    style: Theme.of(context).textTheme.headlineLarge,
-                  ),
-                ],
+              Text(
+                translate("wassup_welcome"),
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
-              // Container(
-              //   width: 48,
-              //   height: 48,
-              //   decoration: BoxDecoration(
-              //     color: AppTheme.lightGreen,
-              //     borderRadius: BorderRadius.circular(14),
-              //   ),
-              //   child: const Icon(
-              //     FontAwesomeIcons.bell,
-              //     size: 20,
-              //     color: AppTheme.darkGreen,
-              //   ),
-              // ),
+              const SizedBox(height: 4),
+              Text(
+                translate("brainiac_hub"),
+                style: Theme.of(context).textTheme.headlineLarge,
+              ),
             ],
           ),
         ],
@@ -74,7 +57,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildFeaturedCard() {
+  Widget _buildFeaturedCard(AppColors c) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
       child: GestureDetector(
@@ -84,14 +67,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
-            gradient: const LinearGradient(
+            gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [Color(0xFF4CAF50), Color(0xFF2E7D32)],
+              colors: [
+                c.accent,
+                HSLColor.fromColor(c.accent).withLightness(0.3).toColor(),
+              ],
             ),
             boxShadow: [
               BoxShadow(
-                color: AppTheme.primaryGreen.withValues(alpha: 0.3),
+                color: c.accent.withValues(alpha: 0.3),
                 blurRadius: 20,
                 offset: const Offset(0, 8),
               ),
@@ -150,8 +136,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                       child: Text(
                         translate("play_now"),
-                        style: const TextStyle(
-                          color: AppTheme.darkGreen,
+                        style: TextStyle(
+                          color: c.accent,
                           fontWeight: FontWeight.w600,
                           fontSize: 14,
                         ),
@@ -181,7 +167,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  SliverGrid _buildGameGrid() {
+  SliverGrid _buildGameGrid(AppColors c) {
     final games = [
       _GameItem(
         translate("sudoku"),
@@ -224,10 +210,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         mainAxisSpacing: 14,
         childAspectRatio: 1.0,
       ),
-      delegate: SliverChildBuilderDelegate((context, index) {
-        final game = games[index];
-        return _buildGameCard(game);
-      }, childCount: games.length),
+      delegate: SliverChildBuilderDelegate(
+        (context, index) => _buildGameCard(games[index]),
+        childCount: games.length,
+      ),
     );
   }
 
@@ -335,7 +321,6 @@ class _GameItem {
   final Color colorEnd;
   final bool isActive;
   final String route;
-
   const _GameItem(
     this.title,
     this.icon,

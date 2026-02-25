@@ -15,7 +15,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.surfaceLight,
+      backgroundColor: context.appColors.surface,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
@@ -35,6 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildProfileHeader() {
+    final c = context.appColors;
     return Column(
       children: [
         Container(
@@ -42,12 +43,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           height: 100,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            gradient: const LinearGradient(
-              colors: [AppTheme.primaryGreen, AppTheme.darkGreen],
+            gradient: LinearGradient(
+              colors: [
+                c.accent,
+                HSLColor.fromColor(c.accent).withLightness(0.3).toColor(),
+              ],
             ),
             boxShadow: [
               BoxShadow(
-                color: AppTheme.primaryGreen.withValues(alpha: 0.3),
+                color: c.accent.withValues(alpha: 0.3),
                 blurRadius: 16,
                 offset: const Offset(0, 6),
               ),
@@ -74,27 +78,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildStatsRow() {
+    final c = context.appColors;
     return Row(
       children: [
         _buildStatCard(
           translate("games"),
           '0',
           FontAwesomeIcons.gamepad,
-          AppTheme.accentBlue,
+          AppColors.gameBlue,
+          c,
         ),
         const SizedBox(width: 12),
         _buildStatCard(
           translate("wins"),
           '0',
           FontAwesomeIcons.trophy,
-          AppTheme.warmOrange,
+          AppColors.gameOrange,
+          c,
         ),
         const SizedBox(width: 12),
         _buildStatCard(
           translate("streak"),
           '0',
           FontAwesomeIcons.fire,
-          AppTheme.softPurple,
+          AppColors.gamePurple,
+          c,
         ),
       ],
     );
@@ -105,16 +113,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     String value,
     IconData icon,
     Color color,
+    AppColors c,
   ) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: c.card,
           borderRadius: BorderRadius.circular(18),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
+              color: c.shadow,
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -126,20 +135,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 10),
             Text(
               value,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w700,
-                color: AppTheme.textPrimary,
+                color: c.textPrimary,
               ),
             ),
             const SizedBox(height: 4),
-            Text(
-              label,
-              style: const TextStyle(
-                fontSize: 12,
-                color: AppTheme.textSecondary,
-              ),
-            ),
+            Text(label, style: TextStyle(fontSize: 12, color: c.textSecondary)),
           ],
         ),
       ),
@@ -147,13 +150,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildSettingsSection() {
+    final c = context.appColors;
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: c.card,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: c.shadow,
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -167,14 +171,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             translate("app_info_credits"),
             onTap: () => context.push('/profile/about'),
           ),
-          _divider(),
+          _divider(c),
           _buildSettingsTile(
             FontAwesomeIcons.gear,
             translate("settings"),
             translate("general_settings"),
             onTap: () => context.push('/profile/settings'),
           ),
-          _divider(),
+          _divider(c),
           _buildSettingsTile(
             FontAwesomeIcons.chartBar,
             translate("statistics"),
@@ -191,6 +195,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     String subtitle, {
     VoidCallback? onTap,
   }) {
+    final c = context.appColors;
     return ListTile(
       onTap: onTap,
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
@@ -198,37 +203,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          color: AppTheme.lightGreen,
+          color: c.accentLight,
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Icon(icon, size: 18, color: AppTheme.darkGreen),
+        child: Icon(icon, size: 18, color: c.accent),
       ),
       title: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 15,
           fontWeight: FontWeight.w600,
-          color: AppTheme.textPrimary,
+          color: c.textPrimary,
         ),
       ),
       subtitle: Text(
         subtitle,
-        style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary),
+        style: TextStyle(fontSize: 13, color: c.textSecondary),
       ),
-      trailing: const Icon(
+      trailing: Icon(
         FontAwesomeIcons.chevronRight,
         size: 14,
-        color: AppTheme.textSecondary,
+        color: c.textSecondary,
       ),
     );
   }
 
-  Widget _divider() {
-    return Divider(
-      height: 1,
-      indent: 76,
-      endIndent: 20,
-      color: Colors.grey.shade100,
-    );
+  Widget _divider(AppColors c) {
+    return Divider(height: 1, indent: 76, endIndent: 20, color: c.divider);
   }
 }
