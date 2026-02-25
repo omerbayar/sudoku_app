@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../theme/app_theme.dart';
 import '../localization/app_localization.dart';
+import '../main.dart' show appearanceSettings;
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -52,6 +53,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ],
           ),
+          _ThemeToggle(c: c),
         ],
       ),
     );
@@ -310,6 +312,87 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _ThemeToggle extends StatelessWidget {
+  final AppColors c;
+  const _ThemeToggle({required this.c});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: appearanceSettings,
+      builder: (context, _) {
+        final isDark =
+            appearanceSettings.themeMode == ThemeModeOption.dark ||
+            (appearanceSettings.themeMode == ThemeModeOption.system &&
+                MediaQuery.platformBrightnessOf(context) == Brightness.dark);
+        final accent = context.appColors.accent;
+
+        return GestureDetector(
+          onTap: () {
+            appearanceSettings.setThemeMode(
+              isDark ? ThemeModeOption.light : ThemeModeOption.dark,
+            );
+          },
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 350),
+            curve: Curves.easeInOut,
+            width: 64,
+            height: 34,
+            padding: const EdgeInsets.all(3),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(17),
+              color: isDark
+                  ? const Color(0xFF2A2A2A)
+                  : accent.withValues(alpha: 0.15),
+              border: Border.all(
+                color: isDark ? Colors.white12 : accent.withValues(alpha: 0.3),
+                width: 1,
+              ),
+            ),
+            child: Stack(
+              children: [
+                AnimatedAlign(
+                  duration: const Duration(milliseconds: 350),
+                  curve: Curves.easeInOut,
+                  alignment: isDark
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
+                  child: Container(
+                    width: 28,
+                    height: 28,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: isDark ? const Color(0xFF3A3A3A) : Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: isDark
+                              ? Colors.black26
+                              : accent.withValues(alpha: 0.3),
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      isDark
+                          ? FontAwesomeIcons.moon
+                          : FontAwesomeIcons.solidSun,
+                      size: 14,
+                      color: Color(
+                        0xFFFFD54F,
+                      ), //isDark ? const Color(0xFFFFD54F) : Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
