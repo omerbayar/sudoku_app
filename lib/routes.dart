@@ -9,10 +9,21 @@ import 'screens/profile_screen/appearance.dart';
 import 'screens/profile_screen/settings.dart';
 import 'screens/search_screen.dart';
 import 'screens/coming_soon_screen.dart';
+import 'screens/login_screen.dart';
+import 'main.dart' show authService;
 
 final GoRouter router = GoRouter(
   initialLocation: '/',
+  refreshListenable: authService,
+  redirect: (context, state) {
+    final loggedIn = authService.isLoggedIn;
+    final isLoginRoute = state.uri.path == '/login';
+    if (!loggedIn && !isLoginRoute) return '/login';
+    if (loggedIn && isLoginRoute) return '/';
+    return null;
+  },
   routes: [
+    GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
     ShellRoute(
       builder: (context, state, child) {
         return ScaffoldWithNavBar(child: child);

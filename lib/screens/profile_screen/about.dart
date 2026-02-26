@@ -28,7 +28,7 @@ class AboutScreen extends StatelessWidget {
             _buildAppIcon(c),
             const SizedBox(height: 20),
             Text(
-              translate("puzzle_hub"),
+              translate("brainiac_hub"),
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 6),

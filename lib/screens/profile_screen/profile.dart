@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../theme/app_theme.dart';
 import '../../localization/app_localization.dart';
+import '../../main.dart' show authService;
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -17,18 +18,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: context.appColors.surface,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              const SizedBox(height: 12),
-              _buildProfileHeader(),
-              const SizedBox(height: 28),
-              _buildStatsRow(),
-              const SizedBox(height: 28),
-              _buildSettingsSection(),
-            ],
-          ),
+        child: ListenableBuilder(
+          listenable: authService,
+          builder: (context, _) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  const SizedBox(height: 12),
+                  _buildProfileHeader(),
+                  const SizedBox(height: 28),
+                  _buildStatsRow(),
+                  const SizedBox(height: 28),
+                  _buildSettingsSection(),
+                  const SizedBox(height: 16),
+                  _buildLogoutButton(),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );
@@ -36,6 +44,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildProfileHeader() {
     final c = context.appColors;
+    final username = authService.username.isNotEmpty
+        ? authService.username
+        : translate("player");
+    final email = authService.email.isNotEmpty
+        ? authService.email
+        : translate("puzzle_enthusiast");
+    final initials = username.isNotEmpty ? username[0].toUpperCase() : '?';
+
     return Column(
       children: [
         Container(
@@ -57,22 +73,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ],
           ),
-          child: const Icon(
-            FontAwesomeIcons.user,
-            size: 36,
-            color: Colors.white,
+          child: Center(
+            child: Text(
+              initials,
+              style: const TextStyle(
+                fontSize: 38,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+              ),
+            ),
           ),
         ),
         const SizedBox(height: 16),
-        Text(
-          translate("player"),
-          style: Theme.of(context).textTheme.headlineMedium,
-        ),
+        Text(username, style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 4),
-        Text(
-          translate("puzzle_enthusiast"),
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
+        Text(email, style: Theme.of(context).textTheme.bodyLarge),
       ],
     );
   }
@@ -183,6 +198,90 @@ class _ProfileScreenState extends State<ProfileScreen> {
             FontAwesomeIcons.chartBar,
             translate("statistics"),
             translate("your_game_history"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLogoutButton() {
+    final c = context.appColors;
+    return Container(
+      decoration: BoxDecoration(
+        color: c.card,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: c.shadow,
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ListTile(
+        onTap: () => _showLogoutDialog(c),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+        leading: Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            color: Colors.redAccent.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: const Icon(
+            FontAwesomeIcons.rightFromBracket,
+            size: 18,
+            color: Colors.redAccent,
+          ),
+        ),
+        title: Text(
+          translate("logout"),
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            color: Colors.redAccent,
+          ),
+        ),
+        trailing: const Icon(
+          FontAwesomeIcons.chevronRight,
+          size: 14,
+          color: Colors.redAccent,
+        ),
+      ),
+    );
+  }
+
+  void _showLogoutDialog(AppColors c) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: c.card,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          translate("logout"),
+          style: TextStyle(color: c.textPrimary),
+        ),
+        content: Text(
+          translate("logout_confirm"),
+          style: TextStyle(color: c.textSecondary),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(
+              translate("cancel"),
+              style: TextStyle(color: c.textSecondary),
+            ),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(ctx);
+              await authService.logout();
+            },
+            child: Text(
+              translate("logout"),
+              style: const TextStyle(color: Colors.redAccent),
+            ),
           ),
         ],
       ),

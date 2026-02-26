@@ -5,8 +5,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'routes.dart';
 import 'theme/app_theme.dart';
 import 'localization/app_localization.dart';
+import 'services/auth_service.dart';
 
 final AppearanceSettings appearanceSettings = AppearanceSettings();
+final AuthService authService = AuthService();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +19,7 @@ void main() async {
     ),
   );
   await appearanceSettings.load();
+  await authService.load();
   runApp(const MyApp());
 }
 
