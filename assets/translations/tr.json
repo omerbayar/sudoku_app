@@ -67,5 +67,21 @@
   "language": "Dil",
   "select_language": "Dil seçin",
   "english": "English",
-  "turkish": "Türkçe"
+  "turkish": "Türkçe",
+  "french": "Français",
+  "german": "Deutsch",
+  "romanian": "Română",
+  "login": "Giriş Yap",
+  "register": "Kayıt Ol",
+  "login_subtitle": "İlerlemenizi takip etmek için giriş yapın",
+  "email": "E-posta",
+  "password": "Şifre",
+  "username": "Kullanıcı adı",
+  "forgot_password": "Şifremi unuttum?",
+  "login_error": "Lütfen geçerli bilgiler girin",
+  "register_error": "Lütfen tüm alanları doldurun",
+  "logout": "Çıkış Yap",
+  "logout_confirm": "Çıkış yapmak istediğinize emin misiniz?",
+  "cancel": "İptal",
+  "edit_profile": "Profili düzenle"
 }

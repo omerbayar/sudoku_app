@@ -74,7 +74,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildLanguageTile(String currentLocale, AppColors c) {
-    final languageLabel = currentLocale == 'tr' ? 'Türkçe' : 'English';
+    final languageLabels = {
+      'tr': 'Türkçe',
+      'en': 'English',
+      'fr': 'Français',
+      'de': 'Deutsch',
+      'ro': 'Română',
+    };
+    final languageLabel = languageLabels[currentLocale] ?? 'English';
     return ListTile(
       onTap: () => _showLanguagePicker(currentLocale, c),
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
@@ -143,6 +150,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 '🇹🇷',
                 'tr',
                 currentLocale == 'tr',
+                c,
+              ),
+              const SizedBox(height: 8),
+              _buildLanguageOption(
+                'Français',
+                '🇫🇷',
+                'fr',
+                currentLocale == 'fr',
+                c,
+              ),
+              const SizedBox(height: 8),
+              _buildLanguageOption(
+                'Deutsch',
+                '🇩🇪',
+                'de',
+                currentLocale == 'de',
+                c,
+              ),
+              const SizedBox(height: 8),
+              _buildLanguageOption(
+                'Română',
+                '🇷🇴',
+                'ro',
+                currentLocale == 'ro',
                 c,
               ),
             ],

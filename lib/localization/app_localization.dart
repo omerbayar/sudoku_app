@@ -40,6 +40,9 @@ class AppLocalization {
   static List<Locale> get supportedLocales => const [
     Locale('en'),
     Locale('tr'),
+    Locale('fr'),
+    Locale('de'),
+    Locale('ro'),
   ];
 }
 
@@ -52,7 +55,8 @@ class _AppLocalizationDelegate extends LocalizationsDelegate<AppLocalization> {
   const _AppLocalizationDelegate();
 
   @override
-  bool isSupported(Locale locale) => ['en', 'tr'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      ['en', 'tr', 'fr', 'de', 'ro'].contains(locale.languageCode);
 
   @override
   Future<AppLocalization> load(Locale locale) async {
