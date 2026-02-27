@@ -1,5 +1,5 @@
-name: sudoku
-description: "A new Flutter project."
+name: brainiac_hub
+description: "It's a Puzzle game made with Flutter for who enjoyed playing intelligence games. It's developed for free playing puzzles. Available for ios, macos and android."
 publish_to: 'none' 
 
 
