@@ -103,6 +103,8 @@ class _LoginScreenState extends State<LoginScreen>
                   children: [_buildLoginForm(c), _buildRegisterForm(c)],
                 ),
               ),
+              const SizedBox(height: 16),
+              _buildGuestButton(c),
             ],
           ),
         ),
@@ -315,6 +317,25 @@ class _LoginScreenState extends State<LoginScreen>
                 ),
               )
             : Text(label),
+      ),
+    );
+  }
+
+  Widget _buildGuestButton(AppColors c) {
+    return TextButton(
+      onPressed: _loading
+          ? null
+          : () async {
+              await authService.continueAsGuest();
+              if (mounted) context.go('/');
+            },
+      child: Text(
+        translate('continue_as_guest'),
+        style: TextStyle(
+          color: c.textSecondary,
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }

@@ -32,7 +32,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(height: 28),
                   _buildSettingsSection(),
                   const SizedBox(height: 16),
-                  _buildLogoutButton(),
+                  if (authService.isGuest)
+                    _buildLoginPromptButton()
+                  else
+                    _buildLogoutButton(),
                 ],
               ),
             );
@@ -44,13 +47,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildProfileHeader() {
     final c = context.appColors;
-    final username = authService.username.isNotEmpty
-        ? authService.username
-        : translate("player");
-    final email = authService.email.isNotEmpty
-        ? authService.email
-        : translate("puzzle_enthusiast");
-    final initials = username.isNotEmpty ? username[0].toUpperCase() : '?';
+    final isGuest = authService.isGuest;
+    final username = isGuest
+        ? translate("guest")
+        : (authService.username.isNotEmpty
+              ? authService.username
+              : translate("player"));
+    final email = isGuest
+        ? translate("guest_subtitle")
+        : (authService.email.isNotEmpty
+              ? authService.email
+              : translate("puzzle_enthusiast"));
+    final initials = isGuest
+        ? '?'
+        : (username.isNotEmpty ? username[0].toUpperCase() : '?');
 
     return Column(
       children: [
@@ -246,6 +256,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
           FontAwesomeIcons.chevronRight,
           size: 14,
           color: Colors.redAccent,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoginPromptButton() {
+    final c = context.appColors;
+    return Container(
+      decoration: BoxDecoration(
+        color: c.card,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: c.shadow,
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ListTile(
+        onTap: () async {
+          await authService.logout();
+        },
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+        leading: Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            color: c.accentLight,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(
+            FontAwesomeIcons.rightToBracket,
+            size: 18,
+            color: c.accent,
+          ),
+        ),
+        title: Text(
+          translate("login"),
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            color: c.accent,
+          ),
+        ),
+        trailing: Icon(
+          FontAwesomeIcons.chevronRight,
+          size: 14,
+          color: c.accent,
         ),
       ),
     );
