@@ -83,5 +83,11 @@
   "logout": "Déconnexion",
   "logout_confirm": "Êtes-vous sûr de vouloir vous déconnecter ?",
   "cancel": "Annuler",
-  "edit_profile": "Modifier le profil"
+  "edit_profile": "Modifier le profil",
+  "continue_as_guest": "Continuer sans connexion",
+  "guest": "Invité",
+  "guest_subtitle": "Connectez-vous pour sauvegarder votre progression",
+  "home": "Accueil",
+  "search": "Recherche",
+  "profile": "Profil"
 }

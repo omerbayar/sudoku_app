@@ -83,5 +83,11 @@
   "logout": "Çıkış Yap",
   "logout_confirm": "Çıkış yapmak istediğinize emin misiniz?",
   "cancel": "İptal",
-  "edit_profile": "Profili düzenle"
+  "edit_profile": "Profili düzenle",
+  "continue_as_guest": "Giriş yapmadan devam et",
+  "guest": "Misafir",
+  "guest_subtitle": "İlerlemenizi kaydetmek için giriş yapın",
+  "home": "Ana Sayfa",
+  "search": "Arama",
+  "profile": "Profil"
 }

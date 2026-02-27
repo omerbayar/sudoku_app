@@ -11,6 +11,7 @@ import 'screens/search_screen.dart';
 import 'screens/coming_soon_screen.dart';
 import 'screens/login_screen.dart';
 import 'main.dart' show authService;
+import 'localization/app_localization.dart';
 
 final GoRouter router = GoRouter(
   initialLocation: '/',
@@ -117,21 +118,21 @@ class ScaffoldWithNavBar extends StatelessWidget {
         child: BottomNavigationBar(
           currentIndex: _calculateSelectedIndex(context),
           onTap: (index) => _onItemTapped(index, context),
-          items: const [
+          items: [
             BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.house),
-              activeIcon: Icon(FontAwesomeIcons.house),
-              label: 'Home',
+              icon: const Icon(FontAwesomeIcons.house),
+              activeIcon: const Icon(FontAwesomeIcons.house),
+              label: translate('home'),
             ),
             BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.magnifyingGlass),
-              activeIcon: Icon(FontAwesomeIcons.magnifyingGlass),
-              label: 'Search',
+              icon: const Icon(FontAwesomeIcons.magnifyingGlass),
+              activeIcon: const Icon(FontAwesomeIcons.magnifyingGlass),
+              label: translate('search'),
             ),
             BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.user),
-              activeIcon: Icon(FontAwesomeIcons.solidUser),
-              label: 'Profile',
+              icon: const Icon(FontAwesomeIcons.user),
+              activeIcon: const Icon(FontAwesomeIcons.solidUser),
+              label: translate('profile'),
             ),
           ],
         ),

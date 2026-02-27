@@ -83,5 +83,11 @@
   "logout": "Deconectare",
   "logout_confirm": "Ești sigur că vrei să te deconectezi?",
   "cancel": "Anulare",
-  "edit_profile": "Editează profilul"
+  "edit_profile": "Editează profilul",
+  "continue_as_guest": "Continuă fără autentificare",
+  "guest": "Oaspete",
+  "guest_subtitle": "Conectează-te pentru a-ți salva progresul",
+  "home": "Acasă",
+  "search": "Căutare",
+  "profile": "Profil"
 }

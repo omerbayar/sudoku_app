@@ -83,5 +83,11 @@
   "logout": "Abmelden",
   "logout_confirm": "Bist du sicher, dass du dich abmelden möchtest?",
   "cancel": "Abbrechen",
-  "edit_profile": "Profil bearbeiten"
+  "edit_profile": "Profil bearbeiten",
+  "continue_as_guest": "Ohne Anmeldung fortfahren",
+  "guest": "Gast",
+  "guest_subtitle": "Melde dich an, um deinen Fortschritt zu speichern",
+  "home": "Startseite",
+  "search": "Suche",
+  "profile": "Profil"
 }
