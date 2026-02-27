@@ -352,42 +352,76 @@ class _LoginScreenState extends State<LoginScreen>
       ('ro', '🇷🇴', 'Română'),
     ];
 
-    return Wrap(
-      spacing: 10,
-      runSpacing: 10,
-      alignment: WrapAlignment.center,
-      children: languages.map((lang) {
-        final isSelected = currentLocale == lang.$1;
-        return GestureDetector(
-          onTap: () => MyApp.setLocale(context, Locale(lang.$1)),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              color: isSelected ? c.accent.withValues(alpha: 0.1) : c.card,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: isSelected ? c.accent : c.border,
-                width: isSelected ? 1.5 : 1,
+    final current = languages.firstWhere(
+      (l) => l.$1 == currentLocale,
+      orElse: () => languages.first,
+    );
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      decoration: BoxDecoration(
+        color: c.card,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: c.border),
+      ),
+      child: DropdownButton<String>(
+        value: current.$1,
+        isExpanded: true,
+        underline: const SizedBox.shrink(),
+        icon: Icon(
+          FontAwesomeIcons.chevronDown,
+          size: 14,
+          color: c.textSecondary,
+        ),
+        dropdownColor: c.card,
+        borderRadius: BorderRadius.circular(14),
+        style: TextStyle(fontSize: 15, color: c.textPrimary),
+        selectedItemBuilder: (context) => languages.map((lang) {
+          return Row(
+            children: [
+              Text(lang.$2, style: const TextStyle(fontSize: 18)),
+              const SizedBox(width: 10),
+              Text(
+                lang.$3,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  color: c.textPrimary,
+                ),
               ),
-            ),
+            ],
+          );
+        }).toList(),
+        items: languages.map((lang) {
+          final isSelected = lang.$1 == currentLocale;
+          return DropdownMenuItem(
+            value: lang.$1,
             child: Row(
-              mainAxisSize: MainAxisSize.min,
               children: [
-                Text(lang.$2, style: const TextStyle(fontSize: 16)),
-                const SizedBox(width: 6),
-                Text(
-                  lang.$3,
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                    color: isSelected ? c.accent : c.textSecondary,
+                Text(lang.$2, style: const TextStyle(fontSize: 18)),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    lang.$3,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.w400,
+                      color: isSelected ? c.accent : c.textPrimary,
+                    ),
                   ),
                 ),
+                if (isSelected)
+                  Icon(FontAwesomeIcons.check, size: 14, color: c.accent),
               ],
             ),
-          ),
-        );
-      }).toList(),
+          );
+        }).toList(),
+        onChanged: (code) {
+          if (code != null) MyApp.setLocale(context, Locale(code));
+        },
+      ),
     );
   }
 }
