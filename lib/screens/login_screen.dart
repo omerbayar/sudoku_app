@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import '../theme/app_theme.dart';
 import '../localization/app_localization.dart';
-import '../main.dart' show authService;
+import '../main.dart' show authService, MyApp;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -97,14 +97,16 @@ class _LoginScreenState extends State<LoginScreen>
               _buildTabBar(c),
               const SizedBox(height: 24),
               SizedBox(
-                height: 380,
+                height: 240,
                 child: TabBarView(
                   controller: _tabController,
                   children: [_buildLoginForm(c), _buildRegisterForm(c)],
                 ),
               ),
-              const SizedBox(height: 16),
               _buildGuestButton(c),
+              const SizedBox(height: 24),
+              _buildLanguageSelector(c),
+              const SizedBox(height: 24),
             ],
           ),
         ),
@@ -337,6 +339,55 @@ class _LoginScreenState extends State<LoginScreen>
           fontWeight: FontWeight.w500,
         ),
       ),
+    );
+  }
+
+  Widget _buildLanguageSelector(AppColors c) {
+    final currentLocale = Localizations.localeOf(context).languageCode;
+    const languages = [
+      ('en', '🇬🇧', 'English'),
+      ('tr', '🇹🇷', 'Türkçe'),
+      ('fr', '🇫🇷', 'Français'),
+      ('de', '🇩🇪', 'Deutsch'),
+      ('ro', '🇷🇴', 'Română'),
+    ];
+
+    return Wrap(
+      spacing: 10,
+      runSpacing: 10,
+      alignment: WrapAlignment.center,
+      children: languages.map((lang) {
+        final isSelected = currentLocale == lang.$1;
+        return GestureDetector(
+          onTap: () => MyApp.setLocale(context, Locale(lang.$1)),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: isSelected ? c.accent.withValues(alpha: 0.1) : c.card,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: isSelected ? c.accent : c.border,
+                width: isSelected ? 1.5 : 1,
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(lang.$2, style: const TextStyle(fontSize: 16)),
+                const SizedBox(width: 6),
+                Text(
+                  lang.$3,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                    color: isSelected ? c.accent : c.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 }
