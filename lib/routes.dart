@@ -65,35 +65,32 @@ final GoRouter router = GoRouter(
         ),
         GoRoute(
           path: '/word-hunt',
-          builder: (context, state) => const ComingSoonScreen(
-            title: 'Word Hunt',
-            description:
-                'Find hidden words in a grid of letters.\nTest your vocabulary and pattern recognition.',
+          builder: (context, state) => ComingSoonScreen(
+            title: translate('word_hunt'),
+            description: translate('word_hunt_description'),
             icon: FontAwesomeIcons.font,
-            colorStart: Color(0xFF7E57C2),
-            colorEnd: Color(0xFF5E35B1),
+            colorStart: const Color(0xFF7E57C2),
+            colorEnd: const Color(0xFF5E35B1),
           ),
         ),
         GoRoute(
           path: '/memory',
-          builder: (context, state) => const ComingSoonScreen(
-            title: 'Memory',
-            description:
-                'Flip cards and match pairs.\nTrain your memory with increasing difficulty.',
+          builder: (context, state) => ComingSoonScreen(
+            title: translate('memory'),
+            description: translate('memory_description'),
             icon: FontAwesomeIcons.brain,
-            colorStart: Color(0xFFFF7043),
-            colorEnd: Color(0xFFE64A19),
+            colorStart: const Color(0xFFFF7043),
+            colorEnd: const Color(0xFFE64A19),
           ),
         ),
         GoRoute(
           path: '/maze',
-          builder: (context, state) => const ComingSoonScreen(
-            title: 'Maze',
-            description:
-                'Navigate through complex mazes.\nFind the shortest path to the exit.',
+          builder: (context, state) => ComingSoonScreen(
+            title: translate('maze'),
+            description: translate('maze_description'),
             icon: FontAwesomeIcons.route,
-            colorStart: Color(0xFF26A69A),
-            colorEnd: Color(0xFF00897B),
+            colorStart: const Color(0xFF26A69A),
+            colorEnd: const Color(0xFF00897B),
           ),
         ),
       ],

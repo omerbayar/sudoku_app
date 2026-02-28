@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../theme/app_theme.dart';
+import '../localization/app_localization.dart';
 
 class ComingSoonScreen extends StatelessWidget {
   final String title;
@@ -86,7 +87,7 @@ class ComingSoonScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 10),
                     Text(
-                      'Coming Soon',
+                      translate('coming_soon'),
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
@@ -109,7 +110,7 @@ class ComingSoonScreen extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    'Go Back',
+                    translate('go_back'),
                     style: TextStyle(
                       color: c.textPrimary,
                       fontWeight: FontWeight.w600,

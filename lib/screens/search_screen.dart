@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import '../theme/app_theme.dart';
+import '../localization/app_localization.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -14,10 +15,10 @@ class _SearchScreenState extends State<SearchScreen> {
   final _searchController = TextEditingController();
   String _selectedCategory = 'All';
 
-  final _allGames = const [
+  List<_SearchGameItem> get _allGames => [
     _SearchGameItem(
-      'Sudoku',
-      'Classic number puzzle',
+      translate('sudoku'),
+      translate('classic_number_puzzle'),
       FontAwesomeIcons.tableCells,
       AppColors.gameBlue,
       true,
@@ -25,8 +26,8 @@ class _SearchScreenState extends State<SearchScreen> {
       'Logic',
     ),
     _SearchGameItem(
-      'Reversi',
-      'Flip and conquer the board',
+      translate('reversi'),
+      translate('flip_and_conquer'),
       FontAwesomeIcons.circleHalfStroke,
       AppColors.gameTeal,
       true,
@@ -34,8 +35,8 @@ class _SearchScreenState extends State<SearchScreen> {
       'Strategy',
     ),
     _SearchGameItem(
-      'Word Hunt',
-      'Find hidden words',
+      translate('word_hunt'),
+      translate('find_hidden_words'),
       FontAwesomeIcons.font,
       AppColors.gamePurple,
       false,
@@ -43,8 +44,8 @@ class _SearchScreenState extends State<SearchScreen> {
       'Words',
     ),
     _SearchGameItem(
-      'Memory',
-      'Test your memory',
+      translate('memory'),
+      translate('test_your_memory'),
       FontAwesomeIcons.brain,
       AppColors.gameOrange,
       false,
@@ -52,8 +53,8 @@ class _SearchScreenState extends State<SearchScreen> {
       'Brain',
     ),
     _SearchGameItem(
-      'Maze',
-      'Find the exit',
+      translate('maze'),
+      translate('find_the_exit'),
       FontAwesomeIcons.route,
       AppColors.gameTeal,
       false,
@@ -104,10 +105,13 @@ class _SearchScreenState extends State<SearchScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 24),
-              Text('Search', style: Theme.of(context).textTheme.headlineLarge),
+              Text(
+                translate('search'),
+                style: Theme.of(context).textTheme.headlineLarge,
+              ),
               const SizedBox(height: 6),
               Text(
-                'Find your next puzzle',
+                translate('find_your_next_puzzle'),
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(height: 20),
@@ -130,7 +134,7 @@ class _SearchScreenState extends State<SearchScreen> {
       controller: _searchController,
       onChanged: (_) => _applyFilters(),
       decoration: InputDecoration(
-        hintText: 'Search puzzles...',
+        hintText: translate('search_puzzles'),
         hintStyle: TextStyle(color: c.textSecondary),
         prefixIcon: Padding(
           padding: const EdgeInsets.only(left: 14, right: 10),
@@ -156,6 +160,13 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _buildCategoryChips(AppColors c) {
     final categories = ['All', 'Logic', 'Words', 'Brain', 'Strategy'];
+    final categoryLabels = {
+      'All': translate('all'),
+      'Logic': translate('logic'),
+      'Words': translate('words'),
+      'Brain': translate('brain'),
+      'Strategy': translate('strategy'),
+    };
     return SizedBox(
       height: 38,
       child: ListView.separated(
@@ -180,7 +191,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               alignment: Alignment.center,
               child: Text(
-                cat,
+                categoryLabels[cat] ?? cat,
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: sel ? FontWeight.w600 : FontWeight.w500,
@@ -199,11 +210,19 @@ class _SearchScreenState extends State<SearchScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          _selectedCategory == 'All' ? 'All Games' : _selectedCategory,
+          _selectedCategory == 'All'
+              ? translate('all_games')
+              : {
+                      'Logic': translate('logic'),
+                      'Words': translate('words'),
+                      'Brain': translate('brain'),
+                      'Strategy': translate('strategy'),
+                    }[_selectedCategory] ??
+                    _selectedCategory,
           style: Theme.of(context).textTheme.titleMedium,
         ),
         Text(
-          '${_filteredGames.length} ${_filteredGames.length == 1 ? 'game' : 'games'}',
+          '${_filteredGames.length} ${_filteredGames.length == 1 ? translate('game_singular') : translate('game_plural')}',
           style: TextStyle(fontSize: 13, color: c.textSecondary),
         ),
       ],
@@ -223,7 +242,7 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'No games found',
+              translate('no_games_found'),
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -232,7 +251,7 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             const SizedBox(height: 6),
             Text(
-              'Try a different search or category',
+              translate('try_different_search'),
               style: TextStyle(color: c.textSecondary),
             ),
           ],
@@ -300,7 +319,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
-                            'Soon',
+                            translate('soon'),
                             style: TextStyle(
                               fontSize: 10,
                               color: c.textSecondary,

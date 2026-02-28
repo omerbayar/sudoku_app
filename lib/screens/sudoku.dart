@@ -470,7 +470,13 @@ class SudokuScreenState extends State<SudokuScreen> {
             borderRadius: BorderRadius.circular(10),
           ),
           child: Text(
-            _selectedDifficulty,
+            {
+                  'Easy': translate("easy"),
+                  'Medium': translate("medium"),
+                  'Hard': translate("hard"),
+                  'Expert': translate("expert"),
+                }[_selectedDifficulty] ??
+                _selectedDifficulty,
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
@@ -498,6 +504,12 @@ class SudokuScreenState extends State<SudokuScreen> {
 
   Widget _buildDifficultySelector(AppColors c) {
     final difficulties = ['Easy', 'Medium', 'Hard', 'Expert'];
+    final difficultyLabels = {
+      'Easy': translate("easy"),
+      'Medium': translate("medium"),
+      'Hard': translate("hard"),
+      'Expert': translate("expert"),
+    };
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
@@ -525,7 +537,7 @@ class SudokuScreenState extends State<SudokuScreen> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
-                  d,
+                  difficultyLabels[d] ?? d,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 13,
@@ -567,7 +579,7 @@ class SudokuScreenState extends State<SudokuScreen> {
               ),
               const SizedBox(height: 16),
               Text(
-                'Sudoku Board',
+                translate("sudoku_board"),
                 style: Theme.of(
                   context,
                 ).textTheme.titleLarge?.copyWith(color: c.textSecondary),
@@ -591,7 +603,16 @@ class SudokuScreenState extends State<SudokuScreen> {
         onPressed: _startGame,
         icon: const Icon(FontAwesomeIcons.play, size: 16),
         label: Text(
-          translate("start_game", {"difficulty": _selectedDifficulty}),
+          translate("start_game", {
+            "difficulty":
+                {
+                  'Easy': translate("easy"),
+                  'Medium': translate("medium"),
+                  'Hard': translate("hard"),
+                  'Expert': translate("expert"),
+                }[_selectedDifficulty] ??
+                _selectedDifficulty,
+          }),
         ),
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 16),

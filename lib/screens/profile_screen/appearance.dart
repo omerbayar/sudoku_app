@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../theme/app_theme.dart';
+import '../../localization/app_localization.dart';
 import '../../main.dart' show appearanceSettings;
 
 class AppearanceScreen extends StatefulWidget {
@@ -25,7 +26,7 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
           onPressed: () => context.pop(),
           icon: const Icon(CupertinoIcons.chevron_back, size: 24),
         ),
-        title: const Text('Appearance'),
+        title: Text(translate('appearance')),
       ),
       body: ListenableBuilder(
         listenable: settings,
@@ -36,15 +37,15 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _sectionTitle('Theme'),
+                _sectionTitle(translate('theme')),
                 const SizedBox(height: 12),
                 _buildThemeSelector(settings, c),
                 const SizedBox(height: 28),
-                _sectionTitle('Accent Color'),
+                _sectionTitle(translate('accent_color')),
                 const SizedBox(height: 12),
                 _buildAccentColorPicker(settings, c),
                 const SizedBox(height: 28),
-                _sectionTitle('Font Size'),
+                _sectionTitle(translate('font_size')),
                 const SizedBox(height: 12),
                 _buildFontScaleSlider(settings, c),
                 const SizedBox(height: 28),
@@ -68,9 +69,13 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
 
   Widget _buildThemeSelector(AppearanceSettings settings, AppColors c) {
     final options = [
-      (ThemeModeOption.light, FontAwesomeIcons.sun, 'Light'),
-      (ThemeModeOption.dark, FontAwesomeIcons.moon, 'Dark'),
-      (ThemeModeOption.system, FontAwesomeIcons.circleHalfStroke, 'System'),
+      (ThemeModeOption.light, FontAwesomeIcons.sun, translate('light')),
+      (ThemeModeOption.dark, FontAwesomeIcons.moon, translate('dark')),
+      (
+        ThemeModeOption.system,
+        FontAwesomeIcons.circleHalfStroke,
+        translate('system'),
+      ),
     ];
     return Container(
       padding: const EdgeInsets.all(6),
@@ -185,7 +190,12 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
 
   Widget _buildFontScaleSlider(AppearanceSettings settings, AppColors c) {
     final accent = settings.accentColor.color;
-    final labels = {0.85: 'Small', 1.0: 'Default', 1.1: 'Large', 1.2: 'XL'};
+    final labels = {
+      0.85: translate('small'),
+      1.0: translate('default_size'),
+      1.1: translate('large'),
+      1.2: translate('xl'),
+    };
     final currentLabel = labels.entries
         .reduce(
           (a, b) =>
@@ -289,13 +299,13 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
-              Icon(FontAwesomeIcons.eye, size: 16, color: Colors.white70),
-              SizedBox(width: 8),
+              const Icon(FontAwesomeIcons.eye, size: 16, color: Colors.white70),
+              const SizedBox(width: 8),
               Text(
-                'Preview',
-                style: TextStyle(
+                translate('preview'),
+                style: const TextStyle(
                   color: Colors.white70,
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
@@ -305,7 +315,7 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
           ),
           const SizedBox(height: 12),
           Text(
-            'This is how your app looks',
+            translate('preview_title'),
             style: TextStyle(
               color: Colors.white,
               fontSize: 18 * settings.fontScale,
@@ -314,7 +324,7 @@ class _AppearanceScreenState extends State<AppearanceScreen> {
           ),
           const SizedBox(height: 6),
           Text(
-            'Colors, fonts, and theme will update across the entire app in real time.',
+            translate('preview_description'),
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.8),
               fontSize: 14 * settings.fontScale,

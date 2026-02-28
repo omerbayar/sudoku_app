@@ -63,7 +63,7 @@ class _MyAppState extends State<MyApp> {
       builder: (context, _) {
         return MaterialApp.router(
           debugShowCheckedModeBanner: false,
-          title: "Puzzle App",
+          title: translate("app_title"),
           theme: AppTheme.fromSettings(appearanceSettings, dark: false),
           darkTheme: AppTheme.fromSettings(appearanceSettings, dark: true),
           themeMode: appearanceSettings.flutterThemeMode,
