@@ -48,7 +48,8 @@ class AppLocalization {
 
 /// Top-level translate function — use anywhere: Text(translate("sudoku"))
 String translate(String key, [Map<String, String>? params]) {
-  return AppLocalization.instance.get(key, params);
+  if (AppLocalization._instance == null) return key;
+  return AppLocalization._instance!.get(key, params);
 }
 
 class _AppLocalizationDelegate extends LocalizationsDelegate<AppLocalization> {

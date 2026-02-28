@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import '../theme/app_theme.dart';
 import '../localization/app_localization.dart';
@@ -32,6 +33,15 @@ class _SearchScreenState extends State<SearchScreen> {
       AppColors.gameTeal,
       true,
       '/reversi',
+      'Strategy',
+    ),
+    _SearchGameItem(
+      translate('chess'),
+      translate('master_the_board'),
+      CupertinoIcons.bold,
+      const Color(0xFFEF5350),
+      true,
+      '/chess',
       'Strategy',
     ),
     _SearchGameItem(

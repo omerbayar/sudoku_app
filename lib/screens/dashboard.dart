@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter/cupertino.dart';
 import '../theme/app_theme.dart';
 import '../localization/app_localization.dart';
 import '../main.dart' show appearanceSettings;
@@ -178,6 +179,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
         const Color(0xFF1E88E5),
         true,
         '/sudokuScreen',
+      ),
+      _GameItem(
+        translate("chess"),
+        CupertinoIcons.bold,
+        const Color(0xFFEF5350),
+        const Color(0xFFC62828),
+        true,
+        '/chess',
       ),
       _GameItem(
         translate("reversi"),
