@@ -102,6 +102,7 @@
   "your_turn": "VOTRE TOUR",
   "bot_thinking": "Le bot réfléchit...",
   "reversi_menu": "Menu",
+  "reversi_discs": "pions",
   "what_is_reversi": "Qu'est-ce que le Reversi ?",
   "reversi_history": "Le Reversi a été inventé en 1883 par Lewis Waterman ou John W. Mollett en Angleterre. La version moderne, commercialisée sous le nom d'Othello, a été popularisée en 1971 par le passionné de jeux japonais Goro Hasegawa. Ses règles simples mais sa stratégie profonde en ont fait l'un des jeux de société les plus populaires au monde.",
   "reversi_rule_1": "Les noirs jouent toujours en premier. Les joueurs placent des pions à tour de rôle.",

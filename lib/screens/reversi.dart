@@ -754,13 +754,11 @@ class ReversiScreenState extends State<ReversiScreen>
       ),
       body: Column(
         children: [
-          const SizedBox(height: 12),
-          _buildScoreBar(c),
-          const SizedBox(height: 10),
-          _buildTurnIndicator(c),
-          const SizedBox(height: 10),
-          _buildBoard(c),
           const SizedBox(height: 8),
+          _buildGameHeader(c),
+          const SizedBox(height: 12),
+          _buildBoard(c),
+          const SizedBox(height: 12),
           _buildActionBar(c),
           const SizedBox(height: 20),
         ],
@@ -819,33 +817,45 @@ class ReversiScreenState extends State<ReversiScreen>
     required String label,
     bool showActions = false,
   }) {
+    final isBlack = discColor == Colors.black;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       child: Row(
         children: [
+          // Disc avatar
           AnimatedContainer(
             duration: const Duration(milliseconds: 300),
-            width: 44,
-            height: 44,
+            width: 40,
+            height: 40,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: discColor,
               border: Border.all(
-                color: isActive ? c.accent : Colors.grey.shade400,
-                width: isActive ? 3 : 1.5,
+                color: isActive
+                    ? c.accent
+                    : (isBlack
+                          ? const Color(0xFF333333)
+                          : const Color(0xFFBBB8B4)),
+                width: isActive ? 2.5 : 1,
               ),
               boxShadow: isActive
                   ? [
                       BoxShadow(
-                        color: c.accent.withValues(alpha: 0.4),
-                        blurRadius: 12,
-                        spreadRadius: 2,
+                        color: c.accent.withValues(alpha: 0.3),
+                        blurRadius: 8,
                       ),
                     ]
-                  : [],
+                  : [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.15),
+                        blurRadius: 3,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 10),
+          // Name + score
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -854,50 +864,50 @@ class ReversiScreenState extends State<ReversiScreen>
                 Text(
                   playerName,
                   style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
                     color: c.textPrimary,
                   ),
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: 1),
                 Row(
                   children: [
-                    Text(
-                      "$label: ",
-                      style: TextStyle(fontSize: 13, color: c.textSecondary),
-                    ),
                     AnimatedSwitcher(
                       duration: const Duration(milliseconds: 300),
                       transitionBuilder: (child, anim) =>
                           ScaleTransition(scale: anim, child: child),
                       child: Text(
                         "$count",
-                        key: ValueKey(count),
+                        key: ValueKey('$label$count'),
                         style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
                           color: c.textPrimary,
                         ),
                       ),
                     ),
+                    Text(
+                      " ${translate("reversi_discs")}",
+                      style: TextStyle(fontSize: 12, color: c.textSecondary),
+                    ),
                     if (isActive) ...[
                       const SizedBox(width: 8),
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
+                      Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
+                          horizontal: 7,
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
                           color: c.accent,
-                          borderRadius: BorderRadius.circular(6),
+                          borderRadius: BorderRadius.circular(5),
                         ),
                         child: Text(
                           translate("your_turn"),
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600,
+                            fontSize: 9,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.3,
                           ),
                         ),
                       ),
@@ -914,29 +924,29 @@ class ReversiScreenState extends State<ReversiScreen>
                 _mode = ReversiMode.none;
               }),
               child: Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: c.card,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: c.border),
                 ),
                 child: Icon(
                   CupertinoIcons.xmark,
-                  size: 16,
+                  size: 14,
                   color: c.textSecondary,
                 ),
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 6),
             GestureDetector(
               onTap: () => setState(() => _initBoard()),
               child: Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: c.accent.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(CupertinoIcons.refresh, size: 16, color: c.accent),
+                child: Icon(CupertinoIcons.refresh, size: 14, color: c.accent),
               ),
             ),
           ],
@@ -947,74 +957,124 @@ class ReversiScreenState extends State<ReversiScreen>
 
   // ─── SHARED WIDGETS ───
 
-  Widget _buildScoreBar(AppColors c) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+  Widget _buildGameHeader(AppColors c) {
+    final isBlackTurn = _currentPlayer == 1;
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: c.card,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(color: c.shadow, blurRadius: 8, offset: const Offset(0, 2)),
+        ],
+      ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _buildScoreChip(
-            c,
-            translate("black"),
-            _blackCount,
-            Colors.black,
-            _currentPlayer == 1,
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: c.accent.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              "VS",
-              style: TextStyle(
-                color: c.accent,
-                fontWeight: FontWeight.w700,
-                fontSize: 16,
-              ),
+          // Black player
+          Expanded(
+            child: _buildPlayerChip(
+              c,
+              Colors.black,
+              _blackCount,
+              isBlackTurn && !_gameOver,
             ),
           ),
-          _buildScoreChip(
-            c,
-            translate("white"),
-            _whiteCount,
-            Colors.white,
-            _currentPlayer == 2,
+          // Turn indicator in center
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 250),
+              child: _gameOver
+                  ? const Icon(
+                      CupertinoIcons.flag_fill,
+                      size: 18,
+                      color: Colors.orange,
+                    )
+                  : _botThinking
+                  ? SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: c.accent,
+                      ),
+                    )
+                  : Icon(
+                      isBlackTurn
+                          ? CupertinoIcons.arrow_left
+                          : CupertinoIcons.arrow_right,
+                      size: 16,
+                      key: ValueKey(isBlackTurn),
+                      color: c.accent,
+                    ),
+            ),
+          ),
+          // White player
+          Expanded(
+            child: _buildPlayerChip(
+              c,
+              Colors.white,
+              _whiteCount,
+              !isBlackTurn && !_gameOver,
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildScoreChip(
+  Widget _buildPlayerChip(
     AppColors c,
-    String label,
-    int count,
     Color discColor,
+    int count,
     bool isActive,
   ) {
+    final isBlack = discColor == Colors.black;
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      duration: const Duration(milliseconds: 250),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: isActive ? c.accent.withValues(alpha: 0.15) : c.surface,
-        borderRadius: BorderRadius.circular(14),
+        color: isActive ? c.accent.withValues(alpha: 0.08) : Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isActive ? c.accent : Colors.grey.withValues(alpha: 0.3),
-          width: isActive ? 2 : 1,
+          color: isActive
+              ? c.accent.withValues(alpha: 0.3)
+              : Colors.transparent,
+          width: 1.5,
         ),
       ),
       child: Row(
+        mainAxisAlignment: isBlack
+            ? MainAxisAlignment.start
+            : MainAxisAlignment.end,
         children: [
+          if (!isBlack) ...[
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (child, anim) =>
+                  ScaleTransition(scale: anim, child: child),
+              child: Text(
+                "$count",
+                key: ValueKey('w$count'),
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                  color: c.textPrimary,
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
+          ],
           Container(
-            width: 20,
-            height: 20,
+            width: 24,
+            height: 24,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: discColor,
               border: Border.all(
-                color: discColor == Colors.black
+                color: isBlack
                     ? const Color(0xFF333333)
                     : const Color(0xFFBBB8B4),
                 width: 0.8,
@@ -1022,49 +1082,30 @@ class ReversiScreenState extends State<ReversiScreen>
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.2),
-                  blurRadius: 1,
+                  blurRadius: 2,
                   offset: const Offset(0, 1),
                 ),
               ],
             ),
           ),
-          const SizedBox(width: 8),
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            transitionBuilder: (child, anim) =>
-                ScaleTransition(scale: anim, child: child),
-            child: Text(
-              "$count",
-              key: ValueKey('$label$count'),
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: c.textPrimary,
+          if (isBlack) ...[
+            const SizedBox(width: 10),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (child, anim) =>
+                  ScaleTransition(scale: anim, child: child),
+              child: Text(
+                "$count",
+                key: ValueKey('b$count'),
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                  color: c.textPrimary,
+                ),
               ),
             ),
-          ),
+          ],
         ],
-      ),
-    );
-  }
-
-  Widget _buildTurnIndicator(AppColors c) {
-    if (_gameOver) return const SizedBox(height: 20);
-    final text = _botThinking
-        ? translate("bot_thinking")
-        : (_currentPlayer == 1
-              ? translate("black_turn")
-              : translate("white_turn"));
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 250),
-      child: Text(
-        text,
-        key: ValueKey(text),
-        style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w600,
-          color: c.textPrimary.withValues(alpha: 0.7),
-        ),
       ),
     );
   }

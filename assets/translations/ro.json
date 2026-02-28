@@ -102,6 +102,7 @@
   "your_turn": "RÂNDUL TĂU",
   "bot_thinking": "Botul se gândește...",
   "reversi_menu": "Meniu",
+  "reversi_discs": "piese",
   "what_is_reversi": "Ce este Reversi?",
   "reversi_history": "Reversi a fost inventat în 1883 de Lewis Waterman sau John W. Mollett în Anglia. Versiunea modernă, comercializată sub numele Othello, a fost popularizată în 1971 de entuziastul japonez de jocuri Goro Hasegawa. Regulile sale simple dar strategia profundă l-au făcut unul dintre cele mai populare jocuri de societate din lume.",
   "reversi_rule_1": "Negrul mută întotdeauna primul. Jucătorii plasează piese pe rând.",

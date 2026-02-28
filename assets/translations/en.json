@@ -102,6 +102,7 @@
   "your_turn": "YOUR TURN",
   "bot_thinking": "Bot is thinking...",
   "reversi_menu": "Menu",
+  "reversi_discs": "discs",
   "what_is_reversi": "What is Reversi?",
   "reversi_history": "Reversi was invented in 1883 by either Lewis Waterman or John W. Mollett in England. The modern version, marketed as Othello, was popularized in 1971 by Japanese game enthusiast Goro Hasegawa. Its simple rules but deep strategy made it one of the most popular board games worldwide.",
   "reversi_rule_1": "Black always moves first. Players take turns placing discs on the board.",

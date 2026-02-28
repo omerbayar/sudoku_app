@@ -102,6 +102,7 @@
   "your_turn": "SENİN SIRAN",
   "bot_thinking": "Bot düşünüyor...",
   "reversi_menu": "Menü",
+  "reversi_discs": "taş",
   "what_is_reversi": "Reversi Nedir?",
   "reversi_history": "Reversi, 1883 yılında İngiltere'de Lewis Waterman veya John W. Mollett tarafından icat edilmiştir. Modern versiyonu, Othello adıyla pazarlanan oyun, 1971'de Japon oyun tutkunu Goro Hasegawa tarafından popülerleştirilmiştir. Basit kuralları ama derin stratejisi onu dünya çapında en popüler masa oyunlarından biri yapmıştır.",
   "reversi_rule_1": "Siyah her zaman ilk hamle yapar. Oyuncular sırayla tahtaya taş yerleştirir.",
