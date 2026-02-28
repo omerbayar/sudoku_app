@@ -14,6 +14,15 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  final PageController _pageController = PageController(viewportFraction: 0.92);
+  int _currentPage = 0;
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final c = context.appColors;
@@ -61,112 +70,162 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildFeaturedCard(AppColors c) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
-      child: GestureDetector(
-        onTap: () => context.push('/sudokuScreen'),
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(24),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                c.accent,
-                HSLColor.fromColor(c.accent).withLightness(0.3).toColor(),
-              ],
-            ),
-            // boxShadow: [
-            //   BoxShadow(
-            //     color: c.accent.withValues(alpha: 0.3),
-            //     blurRadius: 10,
-            //     offset: const Offset(0, 1),
-            //   ),
-            // ],
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
+    final featuredGames = [
+      _FeaturedItem(
+        translate("sudoku"),
+        translate("challenge_your_mind"),
+        FontAwesomeIcons.tableCells,
+        c.accent,
+        HSLColor.fromColor(c.accent).withLightness(0.3).toColor(),
+        '/sudokuScreen',
+      ),
+      _FeaturedItem(
+        translate("chess"),
+        translate("master_the_board"),
+        CupertinoIcons.bold,
+        const Color(0xFFEF5350),
+        const Color(0xFFC62828),
+        '/chess',
+      ),
+      _FeaturedItem(
+        translate("reversi"),
+        translate("reversi_subtitle"),
+        FontAwesomeIcons.circleHalfStroke,
+        const Color(0xFF66BB6A),
+        const Color(0xFF388E3C),
+        '/reversi',
+      ),
+    ];
+
+    return Column(
+      children: [
+        SizedBox(
+          height: 250,
+          child: PageView.builder(
+            controller: _pageController,
+            itemCount: featuredGames.length,
+            onPageChanged: (i) => setState(() => _currentPage = i),
+            itemBuilder: (context, index) {
+              final game = featuredGames[index];
+              return Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 6,
+                  vertical: 12,
+                ),
+                child: GestureDetector(
+                  onTap: () => context.push(game.route),
+                  child: Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(24),
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [game.colorStart, game.colorEnd],
                       ),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        translate("popular"),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.2),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  translate("popular"),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                game.title,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                game.subtitle,
+                                style: TextStyle(
+                                  color: Colors.white.withValues(alpha: 0.85),
+                                  fontSize: 14,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  translate("play_now"),
+                                  style: TextStyle(
+                                    color: game.colorStart,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      translate("sudoku"),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 26,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      translate("challenge_your_mind"),
-                      style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.85),
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        translate("play_now"),
-                        style: TextStyle(
-                          color: c.accent,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
+                        const SizedBox(width: 16),
+                        Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Icon(game.icon, size: 36, color: Colors.white),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-              const SizedBox(width: 16),
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: const Icon(
-                  FontAwesomeIcons.tableCells,
-                  size: 36,
-                  color: Colors.white,
-                ),
-              ),
-            ],
+              );
+            },
           ),
         ),
-      ),
+        const SizedBox(height: 4),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(
+            featuredGames.length,
+            (i) => AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              margin: const EdgeInsets.symmetric(horizontal: 4),
+              width: _currentPage == i ? 20 : 8,
+              height: 8,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                color: _currentPage == i
+                    ? c.accent
+                    : c.textSecondary.withValues(alpha: 0.3),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -412,6 +471,23 @@ class _ThemeToggle extends StatelessWidget {
       },
     );
   }
+}
+
+class _FeaturedItem {
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final Color colorStart;
+  final Color colorEnd;
+  final String route;
+  const _FeaturedItem(
+    this.title,
+    this.subtitle,
+    this.icon,
+    this.colorStart,
+    this.colorEnd,
+    this.route,
+  );
 }
 
 class _GameItem {

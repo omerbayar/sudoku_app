@@ -121,62 +121,65 @@ class _SettingsScreenState extends State<SettingsScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
+      isScrollControlled: true,
       builder: (ctx) => SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                translate("select_language"),
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: c.textPrimary,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  translate("select_language"),
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: c.textPrimary,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              _buildLanguageOption(
-                'English',
-                '🇬🇧',
-                'en',
-                currentLocale == 'en',
-                c,
-              ),
-              const SizedBox(height: 8),
-              _buildLanguageOption(
-                'Türkçe',
-                '🇹🇷',
-                'tr',
-                currentLocale == 'tr',
-                c,
-              ),
-              const SizedBox(height: 8),
-              _buildLanguageOption(
-                'Français',
-                '🇫🇷',
-                'fr',
-                currentLocale == 'fr',
-                c,
-              ),
-              const SizedBox(height: 8),
-              _buildLanguageOption(
-                'Deutsch',
-                '🇩🇪',
-                'de',
-                currentLocale == 'de',
-                c,
-              ),
-              const SizedBox(height: 8),
-              _buildLanguageOption(
-                'Română',
-                '🇷🇴',
-                'ro',
-                currentLocale == 'ro',
-                c,
-              ),
-            ],
+                const SizedBox(height: 16),
+                _buildLanguageOption(
+                  'English',
+                  '🇬🇧',
+                  'en',
+                  currentLocale == 'en',
+                  c,
+                ),
+                const SizedBox(height: 8),
+                _buildLanguageOption(
+                  'Türkçe',
+                  '🇹🇷',
+                  'tr',
+                  currentLocale == 'tr',
+                  c,
+                ),
+                const SizedBox(height: 8),
+                _buildLanguageOption(
+                  'Français',
+                  '🇫🇷',
+                  'fr',
+                  currentLocale == 'fr',
+                  c,
+                ),
+                const SizedBox(height: 8),
+                _buildLanguageOption(
+                  'Deutsch',
+                  '🇩🇪',
+                  'de',
+                  currentLocale == 'de',
+                  c,
+                ),
+                const SizedBox(height: 8),
+                _buildLanguageOption(
+                  'Română',
+                  '🇷🇴',
+                  'ro',
+                  currentLocale == 'ro',
+                  c,
+                ),
+              ],
+            ),
           ),
         ),
       ),
