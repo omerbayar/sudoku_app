@@ -75,16 +75,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
         translate("sudoku"),
         translate("challenge_your_mind"),
         FontAwesomeIcons.tableCells,
-        c.accent,
-        HSLColor.fromColor(c.accent).withLightness(0.3).toColor(),
+        const Color(0xFF42A5F5),
+        // const Color(0xFF1E88E5),
+        HSLColor.fromColor(
+          const Color(0xFF1E88E5),
+        ).withLightness(0.3).toColor(),
         '/sudokuScreen',
       ),
       _FeaturedItem(
         translate("chess"),
         translate("master_the_board"),
-        CupertinoIcons.bold,
+        FontAwesomeIcons.chess,
         const Color(0xFFEF5350),
-        const Color(0xFFC62828),
+        // const Color(0xFFC62828),
+        HSLColor.fromColor(Color(0xFFC62828)).withLightness(0.3).toColor(),
         '/chess',
       ),
       _FeaturedItem(
@@ -92,7 +96,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         translate("reversi_subtitle"),
         FontAwesomeIcons.circleHalfStroke,
         const Color(0xFF66BB6A),
-        const Color(0xFF388E3C),
+        // const Color(0xFF388E3C),
+        HSLColor.fromColor(
+          const Color(0xFF388E3C),
+        ).withLightness(0.3).toColor(),
         '/reversi',
       ),
     ];
@@ -241,7 +248,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       _GameItem(
         translate("chess"),
-        CupertinoIcons.bold,
+        FontAwesomeIcons.chess,
         const Color(0xFFEF5350),
         const Color(0xFFC62828),
         true,
@@ -299,6 +306,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return GestureDetector(
       onTap: () => context.push(game.route),
       child: Container(
+        clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           gradient: LinearGradient(
