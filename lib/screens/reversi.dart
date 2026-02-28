@@ -522,9 +522,9 @@ class ReversiScreenState extends State<ReversiScreen>
                   borderRadius: BorderRadius.circular(28),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF388E3C).withValues(alpha: 0.4),
-                      blurRadius: 20,
-                      offset: const Offset(0, 8),
+                      color: const Color(0xFF388E3C).withValues(alpha: 0.25),
+                      blurRadius: 14,
+                      offset: const Offset(0, 6),
                     ),
                   ],
                 ),
@@ -594,9 +594,9 @@ class ReversiScreenState extends State<ReversiScreen>
           ),
           boxShadow: [
             BoxShadow(
-              color: gradient[1].withValues(alpha: 0.35),
-              blurRadius: 16,
-              offset: const Offset(0, 6),
+              color: gradient[1].withValues(alpha: 0.25),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
@@ -759,7 +759,7 @@ class ReversiScreenState extends State<ReversiScreen>
           const SizedBox(height: 10),
           _buildTurnIndicator(c),
           const SizedBox(height: 10),
-          Expanded(child: _buildBoard(c)),
+          _buildBoard(c),
           const SizedBox(height: 8),
           _buildActionBar(c),
           const SizedBox(height: 20),
@@ -777,8 +777,8 @@ class ReversiScreenState extends State<ReversiScreen>
       body: SafeArea(
         child: Column(
           children: [
-            Expanded(
-              flex: 2,
+            SizedBox(
+              height: 70,
               child: Transform.rotate(
                 angle: 3.14159,
                 child: _buildPlayerArea(
@@ -791,9 +791,9 @@ class ReversiScreenState extends State<ReversiScreen>
                 ),
               ),
             ),
-            Expanded(flex: 7, child: _buildBoard(c)),
-            Expanded(
-              flex: 2,
+            _buildBoard(c),
+            SizedBox(
+              height: 70,
               child: _buildPlayerArea(
                 c,
                 playerName: translate("player_1"),
@@ -1013,7 +1013,19 @@ class ReversiScreenState extends State<ReversiScreen>
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: discColor,
-              border: Border.all(color: Colors.grey, width: 1),
+              border: Border.all(
+                color: discColor == Colors.black
+                    ? const Color(0xFF333333)
+                    : const Color(0xFFBBB8B4),
+                width: 0.8,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.2),
+                  blurRadius: 1,
+                  offset: const Offset(0, 1),
+                ),
+              ],
             ),
           ),
           const SizedBox(width: 8),
@@ -1058,64 +1070,79 @@ class ReversiScreenState extends State<ReversiScreen>
   }
 
   Widget _buildBoard(AppColors c) {
-    return Center(
-      child: AspectRatio(
-        aspectRatio: 1,
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: const Color(0xFF5D4037), width: 6),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.25),
-                blurRadius: 16,
-                offset: const Offset(0, 6),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final side = constraints.maxWidth;
+          return SizedBox(
+            width: side,
+            height: side,
             child: Container(
-              color: const Color(0xFF2E7D32),
-              child: GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(3),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: boardSize,
-                  crossAxisSpacing: 1.5,
-                  mainAxisSpacing: 1.5,
-                ),
-                itemCount: boardSize * boardSize,
-                itemBuilder: (context, index) {
-                  final row = index ~/ boardSize;
-                  final col = index % boardSize;
-                  final piece = _board[row][col];
-                  final isValid = _validMoves[row][col];
-                  final key = _cellKey(row, col);
-                  final isNew = _newCells.contains(key);
-                  final isFlipping = _flippingCells.contains(key);
-                  final prevPiece =
-                      (row < _prevBoard.length && col < _prevBoard[0].length)
-                      ? _prevBoard[row][col]
-                      : 0;
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: const Color(0xFF4E342E),
+                border: Border.all(color: const Color(0xFF3E2723), width: 2),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.15),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.08),
+                    blurRadius: 2,
+                    spreadRadius: 1,
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(6),
+                child: Container(
+                  color: const Color(0xFF1B5E20),
+                  child: Column(
+                    children: List.generate(boardSize, (row) {
+                      return Expanded(
+                        child: Row(
+                          children: List.generate(boardSize, (col) {
+                            final piece = _board[row][col];
+                            final isValid = _validMoves[row][col];
+                            final key = _cellKey(row, col);
+                            final isNew = _newCells.contains(key);
+                            final isFlipping = _flippingCells.contains(key);
+                            final prevPiece =
+                                (row < _prevBoard.length &&
+                                    col < _prevBoard[0].length)
+                                ? _prevBoard[row][col]
+                                : 0;
 
-                  return _ReversiCell(
-                    key: ValueKey('cell_${row}_$col'),
-                    piece: piece,
-                    prevPiece: prevPiece,
-                    isValid: isValid && !_botThinking,
-                    isNew: isNew,
-                    isFlipping: isFlipping,
-                    onTap: isValid && !_botThinking
-                        ? () => _makeMove(row, col)
-                        : null,
-                  );
-                },
+                            return Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(0.75),
+                                child: _ReversiCell(
+                                  key: ValueKey('cell_${row}_$col'),
+                                  piece: piece,
+                                  prevPiece: prevPiece,
+                                  isValid: isValid && !_botThinking,
+                                  isNew: isNew,
+                                  isFlipping: isFlipping,
+                                  onTap: isValid && !_botThinking
+                                      ? () => _makeMove(row, col)
+                                      : null,
+                                ),
+                              ),
+                            );
+                          }),
+                        ),
+                      );
+                    }),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
@@ -1306,9 +1333,13 @@ class _ReversiCellState extends State<_ReversiCell>
       onTap: widget.onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFF388E3C),
-          borderRadius: BorderRadius.circular(3),
-          border: Border.all(color: const Color(0xFF2E7D32), width: 0.5),
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF33892F), Color(0xFF2D7A29)],
+          ),
+          borderRadius: BorderRadius.circular(2),
+          border: Border.all(color: const Color(0xFF1B5E20), width: 0.5),
         ),
         child: Center(child: _buildContent()),
       ),
@@ -1335,8 +1366,8 @@ class _ReversiCellState extends State<_ReversiCell>
         return Transform.scale(scale: _scaleAnimation.value, child: child);
       },
       child: FractionallySizedBox(
-        widthFactor: 0.82,
-        heightFactor: 0.82,
+        widthFactor: 0.78,
+        heightFactor: 0.78,
         child: _disc(widget.piece),
       ),
     );
@@ -1359,8 +1390,8 @@ class _ReversiCellState extends State<_ReversiCell>
             ..setEntry(3, 2, 0.002)
             ..rotateY((1 - scaleX) * 1.5708), // pi/2
           child: FractionallySizedBox(
-            widthFactor: 0.82,
-            heightFactor: 0.82,
+            widthFactor: 0.78,
+            heightFactor: 0.78,
             child: _disc(piece == 0 ? widget.piece : piece),
           ),
         );
@@ -1374,23 +1405,30 @@ class _ReversiCellState extends State<_ReversiCell>
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: RadialGradient(
-          center: const Alignment(-0.3, -0.3),
+          center: const Alignment(-0.3, -0.35),
+          radius: 0.75,
           colors: isBlack
-              ? [const Color(0xFF444444), const Color(0xFF111111)]
-              : [Colors.white, const Color(0xFFDDDDDD)],
+              ? [
+                  const Color(0xFF484848),
+                  const Color(0xFF1C1C1C),
+                  const Color(0xFF0A0A0A),
+                ]
+              : [
+                  const Color(0xFFF5F2EF),
+                  const Color(0xFFE0DCD8),
+                  const Color(0xFFD0CBC6),
+                ],
+          stops: const [0.0, 0.6, 1.0],
+        ),
+        border: Border.all(
+          color: isBlack ? const Color(0xFF333333) : const Color(0xFFBBB8B4),
+          width: 0.8,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.35),
-            blurRadius: 3,
-            offset: const Offset(1, 2),
-          ),
-          BoxShadow(
-            color: (isBlack ? Colors.white : Colors.black).withValues(
-              alpha: 0.08,
-            ),
-            blurRadius: 1,
-            offset: const Offset(-0.5, -0.5),
+            color: Colors.black.withValues(alpha: 0.4),
+            blurRadius: 2.5,
+            offset: const Offset(0.8, 1.5),
           ),
         ],
       ),
@@ -1401,21 +1439,14 @@ class _ReversiCellState extends State<_ReversiCell>
     return AnimatedBuilder(
       animation: _pulseController,
       builder: (context, child) {
+        final opacity = 0.15 + 0.12 * _pulseAnimation.value;
         return FractionallySizedBox(
-          widthFactor: 0.3 * _pulseAnimation.value,
-          heightFactor: 0.3 * _pulseAnimation.value,
+          widthFactor: 0.3,
+          heightFactor: 0.3,
           child: Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.white.withValues(
-                alpha: 0.35 * _pulseAnimation.value,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.white.withValues(alpha: 0.15),
-                  blurRadius: 4,
-                ),
-              ],
+              color: Colors.white.withValues(alpha: opacity),
             ),
           ),
         );
