@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:chess_vectors_flutter/chess_vectors_flutter.dart';
 import '../theme/app_theme.dart';
 import '../localization/app_localization.dart';
 
@@ -52,6 +53,37 @@ String pieceUnicode(int p) {
       return '♟';
     default:
       return '';
+  }
+}
+
+Widget pieceWidget(int p, double size) {
+  switch (p) {
+    case wKing:
+      return WhiteKing(size: size);
+    case wQueen:
+      return WhiteQueen(size: size);
+    case wRook:
+      return WhiteRook(size: size);
+    case wBishop:
+      return WhiteBishop(size: size);
+    case wKnight:
+      return WhiteKnight(size: size);
+    case wPawn:
+      return WhitePawn(size: size);
+    case bKing:
+      return BlackKing(size: size);
+    case bQueen:
+      return BlackQueen(size: size);
+    case bRook:
+      return BlackRook(size: size);
+    case bBishop:
+      return BlackBishop(size: size);
+    case bKnight:
+      return BlackKnight(size: size);
+    case bPawn:
+      return BlackPawn(size: size);
+    default:
+      return const SizedBox.shrink();
   }
 }
 
@@ -512,12 +544,7 @@ class ChessScreenState extends State<ChessScreen> {
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: c.border),
                       ),
-                      child: Center(
-                        child: Text(
-                          pieceUnicode(p),
-                          style: const TextStyle(fontSize: 32),
-                        ),
-                      ),
+                      child: Center(child: pieceWidget(p, 36)),
                     ),
                   ),
                 )
@@ -1156,7 +1183,7 @@ class ChessScreenState extends State<ChessScreen> {
                 child: _buildPlayerArea(
                   c,
                   playerName: translate("player_2"),
-                  pieceChar: '♚',
+                  pieceType: bKing,
                   isActive: !_whiteToMove && !_gameOver,
                   label: translate("black"),
                   isBlackSide: true,
@@ -1169,7 +1196,7 @@ class ChessScreenState extends State<ChessScreen> {
               child: _buildPlayerArea(
                 c,
                 playerName: translate("player_1"),
-                pieceChar: '♔',
+                pieceType: wKing,
                 isActive: _whiteToMove && !_gameOver,
                 label: translate("white"),
                 isBlackSide: false,
@@ -1185,7 +1212,7 @@ class ChessScreenState extends State<ChessScreen> {
   Widget _buildPlayerArea(
     AppColors c, {
     required String playerName,
-    required String pieceChar,
+    required int pieceType,
     required bool isActive,
     required String label,
     required bool isBlackSide,
@@ -1221,9 +1248,7 @@ class ChessScreenState extends State<ChessScreen> {
                     ]
                   : [],
             ),
-            child: Center(
-              child: Text(pieceChar, style: const TextStyle(fontSize: 22)),
-            ),
+            child: Center(child: pieceWidget(pieceType, 24)),
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -1384,7 +1409,7 @@ class ChessScreenState extends State<ChessScreen> {
             : MainAxisAlignment.end,
         children: [
           if (!whitePlayer) ...[
-            Text('♚', style: TextStyle(fontSize: 20, color: c.textPrimary)),
+            pieceWidget(bKing, 24),
             const SizedBox(width: 8),
           ],
           Text(
@@ -1397,7 +1422,7 @@ class ChessScreenState extends State<ChessScreen> {
           ),
           if (whitePlayer) ...[
             const SizedBox(width: 8),
-            Text('♔', style: TextStyle(fontSize: 20, color: c.textPrimary)),
+            pieceWidget(wKing, 24),
           ],
         ],
       ),
@@ -1480,21 +1505,9 @@ class ChessScreenState extends State<ChessScreen> {
                                   children: [
                                     if (piece != empty)
                                       Center(
-                                        child: Text(
-                                          pieceUnicode(piece),
-                                          style: TextStyle(
-                                            fontSize: cellSize * 0.7,
-                                            height: 1.1,
-                                            shadows: [
-                                              Shadow(
-                                                color: Colors.black.withValues(
-                                                  alpha: 0.3,
-                                                ),
-                                                blurRadius: 2,
-                                                offset: const Offset(1, 1),
-                                              ),
-                                            ],
-                                          ),
+                                        child: pieceWidget(
+                                          piece,
+                                          cellSize * 0.8,
                                         ),
                                       ),
                                     if (isValidTarget && piece == empty)
