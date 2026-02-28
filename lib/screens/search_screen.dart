@@ -25,6 +25,15 @@ class _SearchScreenState extends State<SearchScreen> {
       'Logic',
     ),
     _SearchGameItem(
+      'Reversi',
+      'Flip and conquer the board',
+      FontAwesomeIcons.circleHalfStroke,
+      AppColors.gameTeal,
+      true,
+      '/reversi',
+      'Strategy',
+    ),
+    _SearchGameItem(
       'Word Hunt',
       'Find hidden words',
       FontAwesomeIcons.font,

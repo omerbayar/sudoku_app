@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'screens/dashboard.dart';
 import 'screens/sudoku.dart';
+import 'screens/reversi.dart';
 import 'screens/profile_screen/profile.dart';
 import 'screens/profile_screen/about.dart';
 import 'screens/profile_screen/appearance.dart';
@@ -57,6 +58,10 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: '/sudokuScreen',
           builder: (context, state) => const SudokuScreen(),
+        ),
+        GoRoute(
+          path: '/reversi',
+          builder: (context, state) => const ReversiScreen(),
         ),
         GoRoute(
           path: '/word-hunt',

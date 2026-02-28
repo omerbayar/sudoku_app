@@ -180,6 +180,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
         '/sudokuScreen',
       ),
       _GameItem(
+        translate("reversi"),
+        FontAwesomeIcons.circleHalfStroke,
+        const Color(0xFF66BB6A),
+        const Color(0xFF388E3C),
+        true,
+        '/reversi',
+      ),
+      _GameItem(
         translate("word_hunt"),
         FontAwesomeIcons.font,
         const Color(0xFF7E57C2),
