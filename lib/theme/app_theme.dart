@@ -24,7 +24,7 @@ const List<AccentColor> availableAccentColors = [
 ];
 
 class AppearanceSettings extends ChangeNotifier {
-  ThemeModeOption _themeMode = ThemeModeOption.light;
+  ThemeModeOption _themeMode = ThemeModeOption.system;
   int _accentColorIndex = 0;
   double _fontScale = 1.0;
   bool _loaded = false;
@@ -48,7 +48,7 @@ class AppearanceSettings extends ChangeNotifier {
 
   Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
-    _themeMode = ThemeModeOption.values[prefs.getInt('themeMode') ?? 0];
+    _themeMode = ThemeModeOption.values[prefs.getInt('themeMode') ?? 2];
     _accentColorIndex = (prefs.getInt('accentColor') ?? 0).clamp(
       0,
       availableAccentColors.length - 1,
