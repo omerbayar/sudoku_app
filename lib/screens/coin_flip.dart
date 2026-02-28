@@ -6,16 +6,224 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../theme/app_theme.dart';
 import '../localization/app_localization.dart';
 
-class CoinFlipScreen extends StatefulWidget {
+// ─── Mode Selection Screen ───
+
+class CoinFlipScreen extends StatelessWidget {
   const CoinFlipScreen({super.key});
 
   @override
-  State<CoinFlipScreen> createState() => _CoinFlipScreenState();
+  Widget build(BuildContext context) {
+    final c = context.appColors;
+    return Scaffold(
+      backgroundColor: c.surface,
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => context.pop(),
+          icon: const Icon(CupertinoIcons.chevron_back, size: 24),
+        ),
+        title: Text(translate('coin_flip')),
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            children: [
+              const SizedBox(height: 32),
+              // Coin icon
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: const RadialGradient(
+                    center: Alignment(-0.3, -0.3),
+                    colors: [Color(0xFFFFD700), Color(0xFFDAA520)],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFFDAA520).withValues(alpha: 0.3),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  FontAwesomeIcons.coins,
+                  size: 40,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                translate('coin_flip'),
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                translate('coin_flip_subtitle'),
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              const SizedBox(height: 48),
+              // Classic Mode
+              _ModeCard(
+                icon: FontAwesomeIcons.coins,
+                title: translate('classic_mode'),
+                subtitle: translate('classic_mode_desc'),
+                colorStart: const Color(0xFFFFD700),
+                colorEnd: const Color(0xFFDAA520),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const _ClassicCoinFlip()),
+                ),
+              ),
+              const SizedBox(height: 16),
+              // Guess Mode
+              _ModeCard(
+                icon: FontAwesomeIcons.wandMagicSparkles,
+                title: translate('guess_mode'),
+                subtitle: translate('guess_mode_desc'),
+                colorStart: const Color(0xFF7E57C2),
+                colorEnd: const Color(0xFF5E35B1),
+                comingSoon: true,
+                onTap: () {},
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 
-class _CoinFlipScreenState extends State<CoinFlipScreen>
+class _ModeCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Color colorStart;
+  final Color colorEnd;
+  final bool comingSoon;
+  final VoidCallback onTap;
+
+  const _ModeCard({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.colorStart,
+    required this.colorEnd,
+    this.comingSoon = false,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: comingSoon ? null : onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: comingSoon
+                ? [Colors.grey.shade400, Colors.grey.shade500]
+                : [colorStart, colorEnd],
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: (comingSoon ? Colors.grey : colorEnd).withValues(
+                alpha: 0.3,
+              ),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Icon(icon, size: 24, color: Colors.white),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
+                      if (comingSoon) ...[
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 3,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            translate('soon'),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.white.withValues(alpha: 0.85),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (!comingSoon)
+              Icon(
+                FontAwesomeIcons.chevronRight,
+                size: 14,
+                color: Colors.white.withValues(alpha: 0.7),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Classic Coin Flip ───
+
+class _ClassicCoinFlip extends StatefulWidget {
+  const _ClassicCoinFlip();
+
+  @override
+  State<_ClassicCoinFlip> createState() => _ClassicCoinFlipState();
+}
+
+class _ClassicCoinFlipState extends State<_ClassicCoinFlip>
     with SingleTickerProviderStateMixin {
-  // null = henüz atılmadı, true = yazı, false = tura
   bool? _result;
   bool _isFlipping = false;
   int _headsCount = 0;
@@ -80,10 +288,10 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
       backgroundColor: c.surface,
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () => context.pop(),
+          onPressed: () => Navigator.pop(context),
           icon: const Icon(CupertinoIcons.chevron_back, size: 24),
         ),
-        title: Text(translate('coin_flip')),
+        title: Text(translate('classic_mode')),
         actions: [
           if (_totalFlips > 0)
             IconButton(
@@ -94,6 +302,7 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
       ),
       body: SafeArea(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Spacer(flex: 1),
             _buildCoin(c),
@@ -114,7 +323,7 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
     return AnimatedBuilder(
       animation: _flipAnimation,
       builder: (context, child) {
-        final angle = _flipAnimation.value * pi * 4; // 4 tam dönüş
+        final angle = _flipAnimation.value * pi * 4;
         final showBack = ((_flipAnimation.value * 4) % 1) > 0.5;
         return Transform(
           alignment: Alignment.center,
@@ -187,27 +396,25 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
 
   Widget _buildResultText(AppColors c) {
     if (_result == null) {
-      return Text(
-        translate('coin_flip_subtitle'),
-        style: TextStyle(fontSize: 18, color: c.textSecondary),
+      return Center(
+        child: Text(
+          translate('coin_flip_subtitle'),
+          style: TextStyle(fontSize: 18, color: c.textSecondary),
+        ),
       );
     }
     return AnimatedOpacity(
       opacity: _isFlipping ? 0.0 : 1.0,
       duration: const Duration(milliseconds: 300),
-      child: Column(
-        children: [
-          Text(
-            _result! ? translate('heads') : translate('tails'),
-            style: TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.w700,
-              color: _result!
-                  ? const Color(0xFFDAA520)
-                  : const Color(0xFF808080),
-            ),
+      child: Center(
+        child: Text(
+          _result! ? translate('heads') : translate('tails'),
+          style: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.w700,
+            color: _result! ? const Color(0xFFDAA520) : const Color(0xFF808080),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -260,16 +467,16 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildStatItem(
+            _statItem(
               translate('heads_count'),
               _headsCount,
               const Color(0xFFDAA520),
               c,
             ),
             Container(width: 1, height: 36, color: c.divider),
-            _buildStatItem(translate('total_flips'), _totalFlips, c.accent, c),
+            _statItem(translate('total_flips'), _totalFlips, c.accent, c),
             Container(width: 1, height: 36, color: c.divider),
-            _buildStatItem(
+            _statItem(
               translate('tails_count'),
               _tailsCount,
               const Color(0xFF808080),
@@ -281,7 +488,7 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
     );
   }
 
-  Widget _buildStatItem(String label, int value, Color color, AppColors c) {
+  Widget _statItem(String label, int value, Color color, AppColors c) {
     return Column(
       children: [
         Text(
