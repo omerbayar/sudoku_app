@@ -10,6 +10,7 @@ import 'screens/profile_screen/about.dart';
 import 'screens/profile_screen/appearance.dart';
 import 'screens/profile_screen/settings.dart';
 import 'screens/search_screen.dart';
+import 'screens/coin_flip.dart';
 import 'screens/coming_soon_screen.dart';
 import 'screens/login_screen.dart';
 import 'main.dart' show authService;
@@ -67,6 +68,10 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: '/chess',
           builder: (context, state) => const ChessScreen(),
+        ),
+        GoRoute(
+          path: '/coin-flip',
+          builder: (context, state) => const CoinFlipScreen(),
         ),
         GoRoute(
           path: '/word-hunt',

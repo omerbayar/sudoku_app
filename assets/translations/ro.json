@@ -170,5 +170,21 @@
   "draw_chess": "Remiză!",
   "chess_menu": "Meniu",
   "promote_pawn": "Promovare pion",
-  "select_piece": "Selectează o piesă"
+  "select_piece": "Selectează o piesă",
+  "coin_flip": "Aruncă Moneda",
+  "coin_flip_subtitle": "Încearcă-ți norocul",
+  "coin_flip_description": "Jocul clasic cu moneda.\nÎncearcă-ți norocul și vezi rezultatul.",
+  "classic_mode": "Mod Clasic",
+  "classic_mode_desc": "Simplu cap sau pajură",
+  "streak_mode": "Mod Serie",
+  "streak_mode_desc": "În curând",
+  "tap_to_flip": "Aruncă",
+  "heads": "Cap",
+  "tails": "Pajură",
+  "flip_result": "Rezultat",
+  "total_flips": "Total Aruncări",
+  "heads_count": "Cap",
+  "tails_count": "Pajură",
+  "reset_stats": "Resetare",
+  "luck_game": "Noroc"
 }

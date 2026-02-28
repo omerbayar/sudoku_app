@@ -170,5 +170,21 @@
   "draw_chess": "Match nul !",
   "chess_menu": "Menu",
   "promote_pawn": "Promotion du pion",
-  "select_piece": "Sélectionnez une pièce"
+  "select_piece": "Sélectionnez une pièce",
+  "coin_flip": "Pile ou Face",
+  "coin_flip_subtitle": "Tentez votre chance",
+  "coin_flip_description": "Le jeu classique de pile ou face.\nTentez votre chance et voyez le résultat.",
+  "classic_mode": "Mode Classique",
+  "classic_mode_desc": "Simple pile ou face",
+  "streak_mode": "Mode Série",
+  "streak_mode_desc": "Bientôt",
+  "tap_to_flip": "Lancer",
+  "heads": "Pile",
+  "tails": "Face",
+  "flip_result": "Résultat",
+  "total_flips": "Total de Lancers",
+  "heads_count": "Pile",
+  "tails_count": "Face",
+  "reset_stats": "Réinitialiser",
+  "luck_game": "Chance"
 }

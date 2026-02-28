@@ -263,6 +263,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
         '/reversi',
       ),
       _GameItem(
+        translate("coin_flip"),
+        FontAwesomeIcons.coins,
+        const Color(0xFFFFD700),
+        const Color(0xFFDAA520),
+        true,
+        '/coin-flip',
+      ),
+      _GameItem(
         translate("word_hunt"),
         FontAwesomeIcons.font,
         const Color(0xFF7E57C2),

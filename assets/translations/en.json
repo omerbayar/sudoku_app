@@ -170,5 +170,21 @@
   "draw_chess": "Draw!",
   "chess_menu": "Menu",
   "promote_pawn": "Promote Pawn",
-  "select_piece": "Select a piece"
+  "select_piece": "Select a piece",
+  "coin_flip": "Coin Flip",
+  "coin_flip_subtitle": "Try your luck",
+  "coin_flip_description": "Classic coin flip game.\nTry your luck and see the result.",
+  "classic_mode": "Classic Mode",
+  "classic_mode_desc": "Simple heads or tails",
+  "streak_mode": "Streak Mode",
+  "streak_mode_desc": "Coming soon",
+  "tap_to_flip": "Flip",
+  "heads": "Heads",
+  "tails": "Tails",
+  "flip_result": "Result",
+  "total_flips": "Total Flips",
+  "heads_count": "Heads",
+  "tails_count": "Tails",
+  "reset_stats": "Reset",
+  "luck_game": "Luck"
 }

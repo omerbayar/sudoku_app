@@ -170,5 +170,21 @@
   "draw_chess": "Berabere!",
   "chess_menu": "Menü",
   "promote_pawn": "Piyon Terfisi",
-  "select_piece": "Bir taş seçin"
+  "select_piece": "Bir taş seçin",
+  "coin_flip": "Yazı Tura",
+  "coin_flip_subtitle": "Şansını dene",
+  "coin_flip_description": "Klasik yazı tura oyunu.\nŞansını dene ve sonucu gör.",
+  "classic_mode": "Klasik Mod",
+  "classic_mode_desc": "Basit yazı tura at",
+  "streak_mode": "Seri Modu",
+  "streak_mode_desc": "Yakında",
+  "tap_to_flip": "Fırlat",
+  "heads": "Yazı",
+  "tails": "Tura",
+  "flip_result": "Sonuç",
+  "total_flips": "Toplam Atış",
+  "heads_count": "Yazı",
+  "tails_count": "Tura",
+  "reset_stats": "Sıfırla",
+  "luck_game": "Şans"
 }

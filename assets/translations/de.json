@@ -170,5 +170,21 @@
   "draw_chess": "Unentschieden!",
   "chess_menu": "Menü",
   "promote_pawn": "Bauernumwandlung",
-  "select_piece": "Wähle eine Figur"
+  "select_piece": "Wähle eine Figur",
+  "coin_flip": "Münzwurf",
+  "coin_flip_subtitle": "Versuche dein Glück",
+  "coin_flip_description": "Das klassische Münzwurf-Spiel.\nVersuche dein Glück und sieh das Ergebnis.",
+  "classic_mode": "Klassischer Modus",
+  "classic_mode_desc": "Einfacher Münzwurf",
+  "streak_mode": "Serienmodus",
+  "streak_mode_desc": "Demnächst",
+  "tap_to_flip": "Werfen",
+  "heads": "Kopf",
+  "tails": "Zahl",
+  "flip_result": "Ergebnis",
+  "total_flips": "Gesamtwürfe",
+  "heads_count": "Kopf",
+  "tails_count": "Zahl",
+  "reset_stats": "Zurücksetzen",
+  "luck_game": "Glück"
 }

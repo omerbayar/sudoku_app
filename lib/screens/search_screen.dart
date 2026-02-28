@@ -38,11 +38,20 @@ class _SearchScreenState extends State<SearchScreen> {
     _SearchGameItem(
       translate('chess'),
       translate('master_the_board'),
-      CupertinoIcons.bold,
+      FontAwesomeIcons.chess,
       const Color(0xFFEF5350),
       true,
       '/chess',
       'Strategy',
+    ),
+    _SearchGameItem(
+      translate('coin_flip'),
+      translate('coin_flip_subtitle'),
+      FontAwesomeIcons.coins,
+      const Color(0xFFDAA520),
+      true,
+      '/coin-flip',
+      'Luck',
     ),
     _SearchGameItem(
       translate('word_hunt'),
@@ -169,13 +178,14 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget _buildCategoryChips(AppColors c) {
-    final categories = ['All', 'Logic', 'Words', 'Brain', 'Strategy'];
+    final categories = ['All', 'Logic', 'Words', 'Brain', 'Strategy', 'Luck'];
     final categoryLabels = {
       'All': translate('all'),
       'Logic': translate('logic'),
       'Words': translate('words'),
       'Brain': translate('brain'),
       'Strategy': translate('strategy'),
+      'Luck': translate('luck_game'),
     };
     return SizedBox(
       height: 38,
@@ -227,6 +237,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       'Words': translate('words'),
                       'Brain': translate('brain'),
                       'Strategy': translate('strategy'),
+                      'Luck': translate('luck_game'),
                     }[_selectedCategory] ??
                     _selectedCategory,
           style: Theme.of(context).textTheme.titleMedium,
