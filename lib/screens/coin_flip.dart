@@ -6,6 +6,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../theme/app_theme.dart';
 import '../localization/app_localization.dart';
 
+import 'finger_pick.dart';
+
 // ─── Mode Selection Screen ───
 
 class CoinFlipScreen extends StatelessWidget {
@@ -77,15 +79,17 @@ class CoinFlipScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              // Guess Mode
+              // Finger Pick Mode
               _ModeCard(
-                icon: FontAwesomeIcons.wandMagicSparkles,
+                icon: FontAwesomeIcons.handPointer,
                 title: translate('guess_mode'),
                 subtitle: translate('guess_mode_desc'),
                 colorStart: const Color(0xFF7E57C2),
                 colorEnd: const Color(0xFF5E35B1),
-                comingSoon: true,
-                onTap: () {},
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const FingerPickScreen()),
+                ),
               ),
             ],
           ),

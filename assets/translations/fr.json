@@ -176,8 +176,8 @@
   "coin_flip_description": "Le jeu classique de pile ou face.\nTentez votre chance et voyez le résultat.",
   "classic_mode": "Mode Classique",
   "classic_mode_desc": "Simple pile ou face",
-  "guess_mode": "Mode Devinette",
-  "guess_mode_desc": "Pile ou face ? Faites votre prédiction !",
+  "guess_mode": "Choix du Doigt",
+  "guess_mode_desc": "Posez vos doigts, laissez le destin choisir !",
   "tap_to_flip": "Lancer",
   "heads": "Pile",
   "tails": "Face",
@@ -186,5 +186,11 @@
   "heads_count": "Pile",
   "tails_count": "Face",
   "reset_stats": "Réinitialiser",
-  "luck_game": "Chance"
+  "luck_game": "Chance",
+  "finger_place_fingers": "Posez vos doigts sur l'écran",
+  "finger_waiting": "En attente...",
+  "finger_countdown": "{seconds} secondes",
+  "finger_chosen": "Tu es choisi !",
+  "finger_tap_to_restart": "Appuyez pour rejouer",
+  "finger_min_fingers": "Au moins 2 doigts requis"
 }

@@ -176,8 +176,8 @@
   "coin_flip_description": "Classic coin flip game.\nTry your luck and see the result.",
   "classic_mode": "Classic Mode",
   "classic_mode_desc": "Simple heads or tails",
-  "guess_mode": "Guess Mode",
-  "guess_mode_desc": "Heads or tails? Make your prediction!",
+  "guess_mode": "Finger Pick",
+  "guess_mode_desc": "Place your fingers, let fate decide!",
   "tap_to_flip": "Flip",
   "heads": "Heads",
   "tails": "Tails",
@@ -186,5 +186,11 @@
   "heads_count": "Heads",
   "tails_count": "Tails",
   "reset_stats": "Reset",
-  "luck_game": "Luck"
+  "luck_game": "Luck",
+  "finger_place_fingers": "Place your fingers on the screen",
+  "finger_waiting": "Waiting...",
+  "finger_countdown": "{seconds} seconds",
+  "finger_chosen": "You're chosen!",
+  "finger_tap_to_restart": "Tap to play again",
+  "finger_min_fingers": "At least 2 fingers required"
 }

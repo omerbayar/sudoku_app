@@ -176,8 +176,8 @@
   "coin_flip_description": "Das klassische Münzwurf-Spiel.\nVersuche dein Glück und sieh das Ergebnis.",
   "classic_mode": "Klassischer Modus",
   "classic_mode_desc": "Einfacher Münzwurf",
-  "guess_mode": "Ratemodus",
-  "guess_mode_desc": "Kopf oder Zahl? Mach deine Vorhersage!",
+  "guess_mode": "Finger Wahl",
+  "guess_mode_desc": "Legt eure Finger auf, das Schicksal entscheidet!",
   "tap_to_flip": "Werfen",
   "heads": "Kopf",
   "tails": "Zahl",
@@ -186,5 +186,11 @@
   "heads_count": "Kopf",
   "tails_count": "Zahl",
   "reset_stats": "Zurücksetzen",
-  "luck_game": "Glück"
+  "luck_game": "Glück",
+  "finger_place_fingers": "Legt eure Finger auf den Bildschirm",
+  "finger_waiting": "Warten...",
+  "finger_countdown": "{seconds} Sekunden",
+  "finger_chosen": "Du bist gewählt!",
+  "finger_tap_to_restart": "Tippe zum Neustarten",
+  "finger_min_fingers": "Mindestens 2 Finger erforderlich"
 }

@@ -176,8 +176,8 @@
   "coin_flip_description": "Klasik yazı tura oyunu.\nŞansını dene ve sonucu gör.",
   "classic_mode": "Klasik Mod",
   "classic_mode_desc": "Basit yazı tura at",
-  "guess_mode": "Tahmin Modu",
-  "guess_mode_desc": "Yazı mı tura mı gelecek? Tahmin et!",
+  "guess_mode": "Parmak Seç",
+  "guess_mode_desc": "Parmaklarınızı koyun, kader seçsin!",
   "tap_to_flip": "Fırlat",
   "heads": "Yazı",
   "tails": "Tura",
@@ -186,5 +186,11 @@
   "heads_count": "Yazı",
   "tails_count": "Tura",
   "reset_stats": "Sıfırla",
-  "luck_game": "Şans"
+  "luck_game": "Şans",
+  "finger_place_fingers": "Parmaklarınızı ekrana koyun",
+  "finger_waiting": "Bekleniyor...",
+  "finger_countdown": "{seconds} saniye",
+  "finger_chosen": "Seçildin!",
+  "finger_tap_to_restart": "Tekrar oynamak için dokun",
+  "finger_min_fingers": "En az 2 parmak gerekli"
 }

@@ -176,8 +176,8 @@
   "coin_flip_description": "Jocul clasic cu moneda.\nÎncearcă-ți norocul și vezi rezultatul.",
   "classic_mode": "Mod Clasic",
   "classic_mode_desc": "Simplu cap sau pajură",
-  "guess_mode": "Mod Ghicire",
-  "guess_mode_desc": "Cap sau pajură? Fă-ți predicția!",
+  "guess_mode": "Alege Degetul",
+  "guess_mode_desc": "Puneți degetele, lăsați soarta să aleagă!",
   "tap_to_flip": "Aruncă",
   "heads": "Cap",
   "tails": "Pajură",
@@ -186,5 +186,11 @@
   "heads_count": "Cap",
   "tails_count": "Pajură",
   "reset_stats": "Resetare",
-  "luck_game": "Noroc"
+  "luck_game": "Noroc",
+  "finger_place_fingers": "Puneți degetele pe ecran",
+  "finger_waiting": "Se așteaptă...",
+  "finger_countdown": "{seconds} secunde",
+  "finger_chosen": "Ești ales!",
+  "finger_tap_to_restart": "Atinge pentru a juca din nou",
+  "finger_min_fingers": "Cel puțin 2 degete necesare"
 }
