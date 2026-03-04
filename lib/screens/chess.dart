@@ -1434,120 +1434,125 @@ class ChessScreenState extends State<ChessScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final side = constraints.maxWidth;
+          final side = min(constraints.maxWidth, constraints.maxHeight);
           final cellSize = (side - 12) / 8; // account for padding
-          return SizedBox(
-            width: side,
-            height: side,
-            child: Container(
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: const Color(0xFF5D4037),
-                border: Border.all(color: const Color(0xFF3E2723), width: 2),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.15),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.08),
-                    blurRadius: 2,
-                    spreadRadius: 1,
-                  ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(6),
-                child: Column(
-                  children: List.generate(8, (row) {
-                    return Expanded(
-                      child: Row(
-                        children: List.generate(8, (col) {
-                          final isLight = (row + col) % 2 == 0;
-                          final piece = _board[row][col];
-                          final isSelected =
-                              _selectedRow == row && _selectedCol == col;
-                          final isValidTarget = _validMoves.any(
-                            (m) => m[0] == row && m[1] == col,
-                          );
-                          final isLastFrom =
-                              _lastMoveFrom != null &&
-                              _lastMoveFrom![0] == row &&
-                              _lastMoveFrom![1] == col;
-                          final isLastTo =
-                              _lastMoveTo != null &&
-                              _lastMoveTo![0] == row &&
-                              _lastMoveTo![1] == col;
+          return Center(
+            child: SizedBox(
+              width: side,
+              height: side,
+              child: Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: const Color(0xFF5D4037),
+                  border: Border.all(color: const Color(0xFF3E2723), width: 2),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.15),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.08),
+                      blurRadius: 2,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(6),
+                  child: Column(
+                    children: List.generate(8, (row) {
+                      return Expanded(
+                        child: Row(
+                          children: List.generate(8, (col) {
+                            final isLight = (row + col) % 2 == 0;
+                            final piece = _board[row][col];
+                            final isSelected =
+                                _selectedRow == row && _selectedCol == col;
+                            final isValidTarget = _validMoves.any(
+                              (m) => m[0] == row && m[1] == col,
+                            );
+                            final isLastFrom =
+                                _lastMoveFrom != null &&
+                                _lastMoveFrom![0] == row &&
+                                _lastMoveFrom![1] == col;
+                            final isLastTo =
+                                _lastMoveTo != null &&
+                                _lastMoveTo![0] == row &&
+                                _lastMoveTo![1] == col;
 
-                          Color bgColor = isLight
-                              ? const Color(0xFFF0D9B5)
-                              : const Color(0xFFB58863);
-                          if (isSelected) {
-                            bgColor = const Color(
-                              0xFFF6F669,
-                            ).withValues(alpha: 0.8);
-                          } else if (isLastFrom || isLastTo) {
-                            bgColor = isLight
-                                ? const Color(0xFFF7EC6C).withValues(alpha: 0.6)
-                                : const Color(
-                                    0xFFDAC34B,
-                                  ).withValues(alpha: 0.6);
-                          }
+                            Color bgColor = isLight
+                                ? const Color(0xFFF0D9B5)
+                                : const Color(0xFFB58863);
+                            if (isSelected) {
+                              bgColor = const Color(
+                                0xFFF6F669,
+                              ).withValues(alpha: 0.8);
+                            } else if (isLastFrom || isLastTo) {
+                              bgColor = isLight
+                                  ? const Color(
+                                      0xFFF7EC6C,
+                                    ).withValues(alpha: 0.6)
+                                  : const Color(
+                                      0xFFDAC34B,
+                                    ).withValues(alpha: 0.6);
+                            }
 
-                          return Expanded(
-                            child: GestureDetector(
-                              onTap: () => _onCellTap(row, col),
-                              child: Container(
-                                decoration: BoxDecoration(color: bgColor),
-                                child: Stack(
-                                  children: [
-                                    if (piece != empty)
-                                      Center(
-                                        child: pieceWidget(
-                                          piece,
-                                          cellSize * 0.8,
-                                        ),
-                                      ),
-                                    if (isValidTarget && piece == empty)
-                                      Center(
-                                        child: Container(
-                                          width: cellSize * 0.28,
-                                          height: cellSize * 0.28,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Colors.black.withValues(
-                                              alpha: 0.18,
-                                            ),
+                            return Expanded(
+                              child: GestureDetector(
+                                onTap: () => _onCellTap(row, col),
+                                child: Container(
+                                  decoration: BoxDecoration(color: bgColor),
+                                  child: Stack(
+                                    children: [
+                                      if (piece != empty)
+                                        Center(
+                                          child: pieceWidget(
+                                            piece,
+                                            cellSize * 0.8,
                                           ),
                                         ),
-                                      ),
-                                    if (isValidTarget && piece != empty)
-                                      Positioned.fill(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
+                                      if (isValidTarget && piece == empty)
+                                        Center(
+                                          child: Container(
+                                            width: cellSize * 0.28,
+                                            height: cellSize * 0.28,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
                                               color: Colors.black.withValues(
-                                                alpha: 0.25,
+                                                alpha: 0.18,
                                               ),
-                                              width: 3,
-                                            ),
-                                            borderRadius: BorderRadius.circular(
-                                              cellSize * 0.5,
                                             ),
                                           ),
                                         ),
-                                      ),
-                                  ],
+                                      if (isValidTarget && piece != empty)
+                                        Positioned.fill(
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: Colors.black.withValues(
+                                                  alpha: 0.25,
+                                                ),
+                                                width: 3,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                    cellSize * 0.5,
+                                                  ),
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                        }),
-                      ),
-                    );
-                  }),
+                            );
+                          }),
+                        ),
+                      );
+                    }),
+                  ),
                 ),
               ),
             ),
