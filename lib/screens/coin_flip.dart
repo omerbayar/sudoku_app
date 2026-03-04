@@ -229,6 +229,7 @@ class _ClassicCoinFlip extends StatefulWidget {
 class _ClassicCoinFlipState extends State<_ClassicCoinFlip>
     with SingleTickerProviderStateMixin {
   bool? _result;
+  bool? _pendingResult;
   bool _isFlipping = false;
   int _headsCount = 0;
   int _tailsCount = 0;
@@ -241,7 +242,7 @@ class _ClassicCoinFlipState extends State<_ClassicCoinFlip>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 2000),
+      duration: const Duration(milliseconds: 4000),
     );
     _flipAnimation = Tween<double>(
       begin: 0,
@@ -249,7 +250,16 @@ class _ClassicCoinFlipState extends State<_ClassicCoinFlip>
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        setState(() => _isFlipping = false);
+        setState(() {
+          _isFlipping = false;
+          _result = _pendingResult;
+          if (_result!) {
+            _headsCount++;
+          } else {
+            _tailsCount++;
+          }
+          _pendingResult = null;
+        });
         _controller.reset();
       }
     });
@@ -265,12 +275,7 @@ class _ClassicCoinFlipState extends State<_ClassicCoinFlip>
     if (_isFlipping) return;
     setState(() {
       _isFlipping = true;
-      _result = _random.nextBool();
-      if (_result!) {
-        _headsCount++;
-      } else {
-        _tailsCount++;
-      }
+      _pendingResult = _random.nextBool();
     });
     _controller.forward();
   }
@@ -354,7 +359,8 @@ class _ClassicCoinFlipState extends State<_ClassicCoinFlip>
   }
 
   Widget _buildCoinFace(AppColors c, bool showAlternate) {
-    final isHeads = _result ?? true;
+    final activeResult = _isFlipping ? _pendingResult : _result;
+    final isHeads = activeResult ?? true;
     final displayHeads = showAlternate ? !isHeads : isHeads;
 
     final Color coinBase = displayHeads
@@ -435,7 +441,7 @@ class _ClassicCoinFlipState extends State<_ClassicCoinFlip>
               ),
             ),
             child: Center(
-              child: _result == null
+              child: activeResult == null
                   ? Icon(
                       FontAwesomeIcons.question,
                       size: 44,
