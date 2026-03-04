@@ -192,5 +192,8 @@
   "finger_countdown": "{seconds} Sekunden",
   "finger_chosen": "Du bist gewählt!",
   "finger_tap_to_restart": "Tippe zum Neustarten",
-  "finger_min_fingers": "Mindestens 2 Finger erforderlich"
+  "finger_min_fingers": "Mindestens 2 Finger erforderlich",
+  "enter_player2_name": "Name von Spieler 2 eingeben",
+  "player2_name_hint": "Name",
+  "start": "Start"
 }

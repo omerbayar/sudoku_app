@@ -192,5 +192,8 @@
   "finger_countdown": "{seconds} secunde",
   "finger_chosen": "Ești ales!",
   "finger_tap_to_restart": "Atinge pentru a juca din nou",
-  "finger_min_fingers": "Cel puțin 2 degete necesare"
+  "finger_min_fingers": "Cel puțin 2 degete necesare",
+  "enter_player2_name": "Introduceți numele Jucătorului 2",
+  "player2_name_hint": "Nume",
+  "start": "Start"
 }

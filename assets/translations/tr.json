@@ -192,5 +192,8 @@
   "finger_countdown": "{seconds} saniye",
   "finger_chosen": "Seçildin!",
   "finger_tap_to_restart": "Tekrar oynamak için dokun",
-  "finger_min_fingers": "En az 2 parmak gerekli"
+  "finger_min_fingers": "En az 2 parmak gerekli",
+  "enter_player2_name": "Oyuncu 2 İsmini Girin",
+  "player2_name_hint": "İsim",
+  "start": "Başla"
 }

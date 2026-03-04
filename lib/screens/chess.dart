@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:chess_vectors_flutter/chess_vectors_flutter.dart';
 import '../theme/app_theme.dart';
 import '../localization/app_localization.dart';
+import '../main.dart' show authService;
 
 enum ChessMode { none, friend, bot }
 
@@ -117,6 +118,10 @@ class ChessScreenState extends State<ChessScreen> {
   // Last move for highlighting
   List<int>? _lastMoveFrom, _lastMoveTo;
 
+  // Player names for friend mode
+  String _player1Name = '';
+  String _player2Name = '';
+
   void _initBoard() {
     _board = [
       [bRook, bKnight, bBishop, bQueen, bKing, bBishop, bKnight, bRook],
@@ -145,12 +150,63 @@ class ChessScreenState extends State<ChessScreen> {
   }
 
   void _startGame(ChessMode mode, [ChessBotDifficulty? difficulty]) {
+    if (mode == ChessMode.friend) {
+      _showPlayer2NameDialog();
+      return;
+    }
     setState(() {
       _mode = mode;
       if (difficulty != null) _botDifficulty = difficulty;
       _gameStarted = true;
       _initBoard();
     });
+  }
+
+  void _showPlayer2NameDialog() {
+    final controller = TextEditingController();
+    final c = context.appColors;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: c.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          translate("enter_player2_name"),
+          textAlign: TextAlign.center,
+        ),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          decoration: InputDecoration(
+            hintText: translate("player2_name_hint"),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(translate("cancel")),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              final name = controller.text.trim();
+              setState(() {
+                _player1Name = authService.username.isNotEmpty
+                    ? authService.username
+                    : translate("player_1");
+                _player2Name = name.isNotEmpty ? name : translate("player_2");
+                _mode = ChessMode.friend;
+                _gameStarted = true;
+                _initBoard();
+              });
+            },
+            child: Text(translate("start")),
+          ),
+        ],
+      ),
+    );
   }
 
   // ─── MOVE GENERATION ───
@@ -1182,7 +1238,7 @@ class ChessScreenState extends State<ChessScreen> {
                 angle: 3.14159,
                 child: _buildPlayerArea(
                   c,
-                  playerName: translate("player_2"),
+                  playerName: _player2Name,
                   pieceType: bKing,
                   isActive: !_whiteToMove && !_gameOver,
                   label: translate("black"),
@@ -1195,7 +1251,7 @@ class ChessScreenState extends State<ChessScreen> {
               height: 70,
               child: _buildPlayerArea(
                 c,
-                playerName: translate("player_1"),
+                playerName: _player1Name,
                 pieceType: wKing,
                 isActive: _whiteToMove && !_gameOver,
                 label: translate("white"),
