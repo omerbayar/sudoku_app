@@ -241,12 +241,12 @@ class _ClassicCoinFlipState extends State<_ClassicCoinFlip>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 2000),
     );
     _flipAnimation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         setState(() => _isFlipping = false);
@@ -327,14 +327,27 @@ class _ClassicCoinFlipState extends State<_ClassicCoinFlip>
     return AnimatedBuilder(
       animation: _flipAnimation,
       builder: (context, child) {
-        final angle = _flipAnimation.value * pi * 4;
-        final showBack = ((_flipAnimation.value * 4) % 1) > 0.5;
-        return Transform(
-          alignment: Alignment.center,
-          transform: Matrix4.identity()
-            ..setEntry(3, 2, 0.001)
-            ..rotateX(angle),
-          child: _buildCoinFace(c, showBack && _isFlipping),
+        final t = _flipAnimation.value;
+        // 8 yarım tur = 4 tam tur, daha uzun ve gerçekçi dönüş
+        final angle = t * pi * 8;
+        // Hafif Y ekseni sallanması
+        final wobble = sin(t * pi * 3) * 0.15;
+        // Dönüş sırasında hafif yukarı zıplama
+        final bounce = -sin(t * pi) * 40;
+        // Hangi yüzün gösterileceğini belirle
+        final cosVal = cos(angle);
+        final showBack = cosVal < 0;
+
+        return Transform.translate(
+          offset: Offset(0, _isFlipping ? bounce : 0),
+          child: Transform(
+            alignment: Alignment.center,
+            transform: Matrix4.identity()
+              ..setEntry(3, 2, 0.0015)
+              ..rotateX(angle)
+              ..rotateY(_isFlipping ? wobble : 0),
+            child: _buildCoinFace(c, showBack && _isFlipping),
+          ),
         );
       },
     );
@@ -344,10 +357,16 @@ class _ClassicCoinFlipState extends State<_ClassicCoinFlip>
     final isHeads = _result ?? true;
     final displayHeads = showAlternate ? !isHeads : isHeads;
 
-    final Color coinColor = displayHeads
+    final Color coinBase = displayHeads
         ? const Color(0xFFFFD700)
         : const Color(0xFFC0C0C0);
-    final Color coinDarkColor = displayHeads
+    final Color coinDark = displayHeads
+        ? const Color(0xFFB8860B)
+        : const Color(0xFF696969);
+    final Color coinLight = displayHeads
+        ? const Color(0xFFFFF8DC)
+        : const Color(0xFFE8E8E8);
+    final Color coinMid = displayHeads
         ? const Color(0xFFDAA520)
         : const Color(0xFF808080);
 
@@ -356,44 +375,106 @@ class _ClassicCoinFlipState extends State<_ClassicCoinFlip>
       height: 180,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        gradient: RadialGradient(
-          center: const Alignment(-0.3, -0.3),
-          colors: [coinColor, coinDarkColor],
-        ),
+        // Dış kenar - para kalınlığı hissi
+        border: Border.all(color: coinDark, width: 4),
         boxShadow: [
           BoxShadow(
-            color: coinDarkColor.withValues(alpha: 0.4),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
+            color: coinDark.withValues(alpha: 0.5),
+            blurRadius: 24,
+            offset: const Offset(0, 10),
+          ),
+          BoxShadow(
+            color: coinLight.withValues(alpha: 0.3),
+            blurRadius: 8,
+            offset: const Offset(-2, -2),
           ),
         ],
-        border: Border.all(
-          color: coinDarkColor.withValues(alpha: 0.5),
-          width: 3,
-        ),
       ),
-      child: Center(
-        child: _result == null
-            ? Icon(
-                FontAwesomeIcons.question,
-                size: 48,
-                color: Colors.white.withValues(alpha: 0.8),
-              )
-            : Text(
-                displayHeads ? translate('heads') : translate('tails'),
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w800,
-                  color: Colors.white,
-                  shadows: [
-                    Shadow(
-                      color: Colors.black.withValues(alpha: 0.3),
-                      blurRadius: 4,
-                      offset: const Offset(1, 2),
-                    ),
-                  ],
-                ),
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          // Metalik sweep gradient
+          gradient: SweepGradient(
+            center: const Alignment(-0.1, -0.1),
+            colors: [
+              coinLight,
+              coinBase,
+              coinDark,
+              coinBase,
+              coinLight,
+              coinBase,
+              coinDark,
+              coinLight,
+            ],
+          ),
+        ),
+        child: Container(
+          // İç halka
+          margin: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: coinDark.withValues(alpha: 0.4),
+              width: 2,
+            ),
+          ),
+          child: Container(
+            // İç alan - radial gradient ile derinlik
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: RadialGradient(
+                center: const Alignment(-0.3, -0.4),
+                radius: 0.8,
+                colors: [
+                  coinLight.withValues(alpha: 0.9),
+                  coinBase,
+                  coinMid,
+                  coinDark.withValues(alpha: 0.8),
+                ],
+                stops: const [0.0, 0.3, 0.7, 1.0],
               ),
+            ),
+            child: Center(
+              child: _result == null
+                  ? Icon(
+                      FontAwesomeIcons.question,
+                      size: 44,
+                      color: Colors.white.withValues(alpha: 0.8),
+                    )
+                  : Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          displayHeads
+                              ? FontAwesomeIcons.crown
+                              : FontAwesomeIcons.shieldHalved,
+                          size: 32,
+                          color: Colors.white.withValues(alpha: 0.9),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          displayHeads
+                              ? translate('heads')
+                              : translate('tails'),
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                            letterSpacing: 1.2,
+                            shadows: [
+                              Shadow(
+                                color: Colors.black.withValues(alpha: 0.4),
+                                blurRadius: 6,
+                                offset: const Offset(1, 2),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+            ),
+          ),
+        ),
       ),
     );
   }
