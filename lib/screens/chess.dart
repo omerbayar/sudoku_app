@@ -1508,10 +1508,20 @@ class ChessScreenState extends State<ChessScreen> {
                                     children: [
                                       if (piece != empty)
                                         Center(
-                                          child: pieceWidget(
-                                            piece,
-                                            cellSize * 0.8,
-                                          ),
+                                          child:
+                                              _mode == ChessMode.friend &&
+                                                  isBlack(piece)
+                                              ? Transform.rotate(
+                                                  angle: 3.14159,
+                                                  child: pieceWidget(
+                                                    piece,
+                                                    cellSize * 0.8,
+                                                  ),
+                                                )
+                                              : pieceWidget(
+                                                  piece,
+                                                  cellSize * 0.8,
+                                                ),
                                         ),
                                       if (isValidTarget && piece == empty)
                                         Center(
